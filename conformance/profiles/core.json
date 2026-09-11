@@ -1,0 +1,9 @@
+{
+  "name": "core",
+  "description": "Universal rules error; sector-contextual rules warn (D12).",
+  "include_builtin": true,
+  "severity_overrides": {},
+  "keywords": [
+    "UsdAecoValidators"
+  ]
+}

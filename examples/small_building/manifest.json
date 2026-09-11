@@ -1,0 +1,81 @@
+{
+  "actual_findings_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+  "datacentre": {
+    "ref": "v0.4.1",
+    "variant": "base"
+  },
+  "facility": "demo-datacentre-01",
+  "findings_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+  "pins": {
+    "datacentre": {
+      "library": null,
+      "ref": "v0.4.1",
+      "repo": "usdaeco-datacentre"
+    },
+    "toolchain": {
+      "library": null,
+      "ref": "v0.3.1",
+      "repo": "usdaeco-toolchain"
+    }
+  },
+  "renders": [
+    {
+      "bytes": 74939,
+      "height": 800,
+      "path": "renders/overview.png",
+      "sha256": "f6cb7e29bd2c6c03a6b070ed3436e6081bce59b2eef68d575771bb4bfc125fb4",
+      "width": 1280
+    }
+  ],
+  "result": {
+    "bytes": 141095,
+    "files": [
+      {
+        "bytes": 588,
+        "path": "result/README.md",
+        "sha256": "8fef07eed3a302db2d22b9c60ffc09bfc89fae29995ee10e88ea1ac4d5c4be99"
+      },
+      {
+        "bytes": 11916,
+        "normalized_sha256": "f354db184f251213803cd9a8d1bdfcd82ba2c9253749bc9fe3e24ca32edd85e6",
+        "path": "result/example.usdc",
+        "sha256": "f2216c5f2d8ecc6ad6aff4824843bbbf591359e5de31567be86a76b96cef2040"
+      },
+      {
+        "bytes": 594,
+        "path": "result/layers/inputs/cameras.usda",
+        "sha256": "5dd93c9a725dd9e9aaf278e8b1a711f6f3eae66c8863a74fc11ef0a33965a13f"
+      },
+      {
+        "bytes": 53401,
+        "path": "result/layers/out/authored.usda",
+        "sha256": "fb3b3f46748f557763edc6e1257ed0c8fbd7e1435748ae18fe03514adbe27c79"
+      },
+      {
+        "bytes": 74596,
+        "path": "result/vanilla.png",
+        "sha256": "c99e2496c8a866e01c43a1a09503559d6cb545f5fdc87e6ff720d1fffad7950e"
+      }
+    ],
+    "normalization": "sdf-usda-v1",
+    "prim_count": 74,
+    "vanilla": {
+      "bytes": 74596,
+      "height": 800,
+      "path": "result/vanilla.png",
+      "sha256": "c99e2496c8a866e01c43a1a09503559d6cb545f5fdc87e6ff720d1fffad7950e",
+      "width": 1280
+    }
+  },
+  "source": {
+    "layers": [
+      {
+        "bytes": 53401,
+        "path": "small_building.usda",
+        "sha256": "fb3b3f46748f557763edc6e1257ed0c8fbd7e1435748ae18fe03514adbe27c79"
+      }
+    ],
+    "mode": "minimal",
+    "sha256": "fb3b3f46748f557763edc6e1257ed0c8fbd7e1435748ae18fe03514adbe27c79"
+  }
+}

@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.DS_Store
+.pytest_cache/
+artifacts/
+/out/
+/examples/*/out/
+*.egg-info/
+flake.lock
+/result
+/result-*

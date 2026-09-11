@@ -1,0 +1,61 @@
+{
+  "Plugins": [
+    {
+      "Type": "python",
+      "Name": "usdAecoValidators",
+      "Root": ".",
+      "Info": {
+        "Validators": {
+          "keywords": [
+            "UsdAecoValidators"
+          ],
+          "IdentityChecker": {
+            "doc": "Check Identity using the core validation contract."
+          },
+          "SpatialGrammarChecker": {
+            "doc": "Check SpatialGrammar using the core validation contract.",
+            "schemaTypes": [
+              "UsdGeomImageable"
+            ]
+          },
+          "ClassificationChecker": {
+            "doc": "Check Classification using the core validation contract.",
+            "schemaTypes": [
+              "UsdTyped"
+            ]
+          },
+          "PortConnectivityChecker": {
+            "doc": "Check PortConnectivity using the core validation contract.",
+            "schemaTypes": [
+              "UsdAecoPort"
+            ]
+          },
+          "GroupChecker": {
+            "doc": "Check Group using the core validation contract.",
+            "schemaTypes": [
+              "UsdAecoGroupBase"
+            ]
+          },
+          "DerivedGeometryChecker": {
+            "doc": "Check DerivedGeometry using the core validation contract.",
+            "schemaTypes": [
+              "UsdAecoDerivedGeometryAPI"
+            ]
+          },
+          "DerivedExactOnMeshChecker": {
+            "doc": "Check DerivedExactOnMesh using the core validation contract.",
+            "schemaTypes": [
+              "UsdAecoDerivedGeometryAPI"
+            ]
+          },
+          "ExactWithoutToleranceChecker": {
+            "doc": "Check ExactWithoutTolerance using the core validation contract.",
+            "schemaTypes": [
+              "UsdAecoDerivedGeometryAPI"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,1001 @@
+#usda 1.0
+(
+    defaultPrim = "SmallProject"
+    fallbackPrimTypes = {
+        token[] AecoFacility = ["Xform"]
+        token[] AecoFacilityPart = ["Xform"]
+        token[] AecoLevel = ["Xform"]
+        token[] AecoPort = ["Xform"]
+        token[] AecoSite = ["Xform"]
+        token[] AecoSpace = ["Xform"]
+        token[] AecoSystem = ["Scope"]
+        token[] AecoZone = ["Scope"]
+    }
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "SmallProject" (
+    prepend apiSchemas = ["AecoProjectAPI"]
+    kind = "assembly"
+)
+{
+    string aeco:project:id = "22de894f-1a16-5d9b-82f4-988837ce6db1"
+    string aeco:project:name = "Schema Demo House"
+
+    def AecoSite "Site"
+    {
+        string aeco:id = "ab0996cb-8372-5a79-b222-9d35a3ae1530"
+
+        def AecoFacility "Building" (
+            prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+        )
+        {
+            string aeco:class:ifc:code = "IfcBuilding"
+            string aeco:class:ifc:name = "Building"
+            string aeco:id = "40313dff-ce9d-5497-8089-9d70abd49627"
+
+            def AecoLevel "Level1"
+            {
+                double aeco:elevation = 0
+                string aeco:id = "41631b24-fc1a-51e5-aed6-8cc12f2bc631"
+
+                def Xform "WallNorth" (
+                    delete apiSchemas = ["SemanticsLabelsAPI:kind"]
+                    prepend apiSchemas = ["AecoElementAPI"]
+                    prepend inherits = </_TypeCatalog/ExternalCavityWall>
+                )
+                {
+                    string aeco:id = "e1337f59-b0e2-5dd0-8474-c578c5b0afbd"
+
+                    def BasisCurves "Axis" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "axis"
+                        string aeco:derived:source = "e1337f59-b0e2-5dd0-8474-c578c5b0afbd"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        int[] curveVertexCounts = [2]
+                        float3[] extent = [(-3.2, 2.1, 0.2), (3.2, 2.1, 0.2)]
+                        point3f[] points = [(-3.2, 2.1, 0.2), (3.2, 2.1, 0.2)]
+                        color3f[] primvars:displayColor = [(0.03, 0.3, 0.85)]
+                        uniform token purpose = "guide"
+                        uniform token type = "linear"
+                        float[] widths = [0.035] (
+                            interpolation = "constant"
+                        )
+                        uniform token wrap = "nonperiodic"
+                    }
+
+                    def Cube "Geom" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "e1337f59-b0e2-5dd0-8474-c578c5b0afbd"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.79, 0.74, 0.64)]
+                        double size = 1
+                        double3 xformOp:scale = (6.4, 0.2, 2.7)
+                        double3 xformOp:translate = (0, 2.1, 1.55)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+                }
+
+                def Xform "WallPartition" (
+                    prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                )
+                {
+                    string aeco:class:ifc:code = "IfcWall.PARTITIONING"
+                    string aeco:class:ifc:name = "Wall (partitioning)"
+                    string aeco:id = "59c47682-097a-5121-b9ae-ec35085e206f"
+
+                    def BasisCurves "Axis" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "axis"
+                        string aeco:derived:source = "59c47682-097a-5121-b9ae-ec35085e206f"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        int[] curveVertexCounts = [2]
+                        float3[] extent = [(-3.2, -2.1, 0.2), (3.2, -2.1, 0.2)]
+                        point3f[] points = [(-3.2, -2.1, 0.2), (3.2, -2.1, 0.2)]
+                        color3f[] primvars:displayColor = [(0.03, 0.3, 0.85)]
+                        uniform token purpose = "guide"
+                        uniform token type = "linear"
+                        float[] widths = [0.035] (
+                            interpolation = "constant"
+                        )
+                        uniform token wrap = "nonperiodic"
+                    }
+
+                    def Cube "Left" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "59c47682-097a-5121-b9ae-ec35085e206f"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.79, 0.74, 0.64)]
+                        double size = 1
+                        double3 xformOp:scale = (1.2, 0.2, 2.7)
+                        double3 xformOp:translate = (-2.6, -2.1, 1.55)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+
+                    def Cube "Right" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "59c47682-097a-5121-b9ae-ec35085e206f"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.79, 0.74, 0.64)]
+                        double size = 1
+                        double3 xformOp:scale = (4.2, 0.2, 2.7)
+                        double3 xformOp:translate = (1.1, -2.1, 1.55)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+
+                    def Cube "Lintel" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "59c47682-097a-5121-b9ae-ec35085e206f"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.79, 0.74, 0.64)]
+                        double size = 1
+                        double3 xformOp:scale = (1, 0.2, 0.6)
+                        double3 xformOp:translate = (-1.5, -2.1, 2.6)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+                }
+
+                def Xform "DoorMain" (
+                    prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                )
+                {
+                    string aeco:class:ifc:code = "IfcDoor.DOOR"
+                    string aeco:class:ifc:name = "Door"
+                    string aeco:id = "79c2da89-cd4e-541d-a55c-8910b756fc02"
+
+                    def Cube "Geom" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "79c2da89-cd4e-541d-a55c-8910b756fc02"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.39, 0.2, 0.09)]
+                        double size = 1
+                        double3 xformOp:scale = (0.9, 0.06, 2.02)
+                        double3 xformOp:translate = (-1.5, -2.1, 1.23)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+
+                    def Cube "JambLeft" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "79c2da89-cd4e-541d-a55c-8910b756fc02"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.18, 0.2, 0.21)]
+                        double size = 1
+                        double3 xformOp:scale = (0.06, 0.24, 2.1)
+                        double3 xformOp:translate = (-1.97, -2.12, 1.25)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+
+                    def Cube "JambRight" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "79c2da89-cd4e-541d-a55c-8910b756fc02"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.18, 0.2, 0.21)]
+                        double size = 1
+                        double3 xformOp:scale = (0.06, 0.24, 2.1)
+                        double3 xformOp:translate = (-1.03, -2.12, 1.25)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+
+                    def Cube "Head" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "79c2da89-cd4e-541d-a55c-8910b756fc02"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.18, 0.2, 0.21)]
+                        double size = 1
+                        double3 xformOp:scale = (1, 0.24, 0.06)
+                        double3 xformOp:translate = (-1.5, -2.12, 2.27)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+
+                    def Cube "Handle" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "79c2da89-cd4e-541d-a55c-8910b756fc02"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.85, 0.78, 0.55)]
+                        double size = 1
+                        double3 xformOp:scale = (0.04, 0.045, 0.18)
+                        double3 xformOp:translate = (-1.18, -2.18, 1.2)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+                }
+
+                def Xform "CWEntry" (
+                    prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                )
+                {
+                    string aeco:class:ifc:code = "IfcPipeSegment.RIGIDSEGMENT"
+                    string aeco:class:ifc:name = "Pipe Segment"
+                    string aeco:id = "ab096698-1b91-5c84-810c-5150bea6d9ce"
+                    double aeco:props:Pset_PipeSegmentTypeCommon:NominalDiameter = 25
+
+                    def AecoPort "Out"
+                    {
+                        prepend rel aeco:connectedPorts = </SmallProject/Site/Building/Level1/CWRiser/In>
+                        uniform token aeco:flowDirection = "source"
+                        string aeco:id = "d3356492-f76a-5470-9e37-b81f9d7bf4cc"
+                        uniform token aeco:medium = "pipe"
+                        double3 xformOp:translate = (-3.5, 1.4, 0.5)
+                        uniform token[] xformOpOrder = ["xformOp:translate"]
+                    }
+
+                    def BasisCurves "Axis" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "axis"
+                        string aeco:derived:source = "ab096698-1b91-5c84-810c-5150bea6d9ce"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        int[] curveVertexCounts = [2]
+                        float3[] extent = [(-4.6, 1.4, 0.5), (-3.5, 1.4, 0.5)]
+                        point3f[] points = [(-4.6, 1.4, 0.5), (-3.5, 1.4, 0.5)]
+                        color3f[] primvars:displayColor = [(0.03, 0.3, 0.85)]
+                        uniform token purpose = "guide"
+                        uniform token type = "linear"
+                        float[] widths = [0.035] (
+                            interpolation = "constant"
+                        )
+                        uniform token wrap = "nonperiodic"
+                    }
+
+                    def Cylinder "Geom" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "ab096698-1b91-5c84-810c-5150bea6d9ce"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        uniform token axis = "Z"
+                        float3[] extent = [(-0.025, -0.025, -0.55), (0.025, 0.025, 0.55)]
+                        double height = 1.0999999999999996
+                        color3f[] primvars:displayColor = [(0.055, 0.29, 0.64)]
+                        double radius = 0.025
+                        quatd xformOp:orient = (0.7071067811865476, 0, 0.7071067811865475, 0)
+                        double3 xformOp:translate = (-4.05, 1.4, 0.5)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+                    }
+                }
+
+                def Xform "CWRiser" (
+                    prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                )
+                {
+                    string aeco:class:ifc:code = "IfcPipeSegment.RIGIDSEGMENT"
+                    string aeco:class:ifc:name = "Pipe Segment"
+                    string aeco:id = "4bf702c3-4bcf-587b-bcae-828878458a6f"
+                    double aeco:props:Pset_PipeSegmentTypeCommon:NominalDiameter = 22
+                    prepend rel aeco:referencedContainers = </SmallProject/Site/Building/Level2>
+
+                    def AecoPort "In"
+                    {
+                        prepend rel aeco:connectedPorts = </SmallProject/Site/Building/Level1/CWEntry/Out>
+                        uniform token aeco:flowDirection = "sink"
+                        string aeco:id = "bdaad389-4cd0-565a-8a94-566ffdcc2d66"
+                        uniform token aeco:medium = "pipe"
+                        double3 xformOp:translate = (-3.5, 1.4, 0.5)
+                        uniform token[] xformOpOrder = ["xformOp:translate"]
+                    }
+
+                    def AecoPort "Out"
+                    {
+                        prepend rel aeco:connectedPorts = </SmallProject/Site/Building/Level2/Bathroom/CWBranch/In>
+                        uniform token aeco:flowDirection = "source"
+                        string aeco:id = "ecb4db80-9c8c-5bd4-8d81-358e2bba7635"
+                        uniform token aeco:medium = "pipe"
+                        double3 xformOp:translate = (-3.5, 1.4, 3.7)
+                        uniform token[] xformOpOrder = ["xformOp:translate"]
+                    }
+
+                    def BasisCurves "Axis" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "axis"
+                        string aeco:derived:source = "4bf702c3-4bcf-587b-bcae-828878458a6f"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        int[] curveVertexCounts = [2]
+                        float3[] extent = [(-3.5, 1.4, 0.5), (-3.5, 1.4, 3.7)]
+                        point3f[] points = [(-3.5, 1.4, 0.5), (-3.5, 1.4, 3.7)]
+                        color3f[] primvars:displayColor = [(0.03, 0.3, 0.85)]
+                        uniform token purpose = "guide"
+                        uniform token type = "linear"
+                        float[] widths = [0.035] (
+                            interpolation = "constant"
+                        )
+                        uniform token wrap = "nonperiodic"
+                    }
+
+                    def Cylinder "Geom" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "4bf702c3-4bcf-587b-bcae-828878458a6f"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        uniform token axis = "Z"
+                        float3[] extent = [(-0.022, -0.022, -1.6), (0.022, 0.022, 1.6)]
+                        double height = 3.2
+                        color3f[] primvars:displayColor = [(0.055, 0.29, 0.64)]
+                        double radius = 0.022
+                        quatd xformOp:orient = (1, 0, 0, 0)
+                        double3 xformOp:translate = (-3.5, 1.4, 2.1)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+                    }
+                }
+
+                def Xform "WallEast" (
+                    prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                )
+                {
+                    string aeco:class:ifc:code = "IfcWall.SOLIDWALL"
+                    string aeco:class:ifc:name = "East wall"
+                    string aeco:id = "4cddb76e-2299-59fa-996c-aad7e600bfc8"
+
+                    def Cube "Geom" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "4cddb76e-2299-59fa-996c-aad7e600bfc8"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.79, 0.74, 0.64)]
+                        double size = 1
+                        double3 xformOp:scale = (0.2, 4.4, 2.7)
+                        double3 xformOp:translate = (3.1, 0, 1.55)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+                }
+
+                def Xform "WallWest" (
+                    prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                )
+                {
+                    string aeco:class:ifc:code = "IfcWall.SOLIDWALL"
+                    string aeco:class:ifc:name = "West wall with window opening"
+                    string aeco:id = "80588640-a8c2-5430-9b02-0549095a788c"
+
+                    def Cube "Front" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "80588640-a8c2-5430-9b02-0549095a788c"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.79, 0.74, 0.64)]
+                        double size = 1
+                        double3 xformOp:scale = (0.2, 1.6, 2.7)
+                        double3 xformOp:translate = (-3.1, -1.4, 1.55)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+
+                    def Cube "Back" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "80588640-a8c2-5430-9b02-0549095a788c"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.79, 0.74, 0.64)]
+                        double size = 1
+                        double3 xformOp:scale = (0.2, 1.6, 2.7)
+                        double3 xformOp:translate = (-3.1, 1.4, 1.55)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+
+                    def Cube "Sill" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "80588640-a8c2-5430-9b02-0549095a788c"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.79, 0.74, 0.64)]
+                        double size = 1
+                        double3 xformOp:scale = (0.2, 1.2, 0.9)
+                        double3 xformOp:translate = (-3.1, 0, 0.65)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+
+                    def Cube "Lintel" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "80588640-a8c2-5430-9b02-0549095a788c"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.79, 0.74, 0.64)]
+                        double size = 1
+                        double3 xformOp:scale = (0.2, 1.2, 0.6)
+                        double3 xformOp:translate = (-3.1, 0, 2.6)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+                }
+
+                def Xform "FloorSlab" (
+                    prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                )
+                {
+                    string aeco:class:ifc:code = "IfcSlab.FLOOR"
+                    string aeco:class:ifc:name = "Floor slab"
+                    string aeco:id = "2c6e59b3-b6e7-5231-a067-bc41a4fc90b6"
+
+                    def Cube "Geom" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "2c6e59b3-b6e7-5231-a067-bc41a4fc90b6"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.4, 0.45, 0.49)]
+                        double size = 1
+                        double3 xformOp:scale = (6.6, 4.6, 0.2)
+                        double3 xformOp:translate = (0, 0, 0.1)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+                }
+
+                def Xform "RoofSlab" (
+                    prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                )
+                {
+                    string aeco:class:ifc:code = "IfcSlab.ROOF"
+                    string aeco:class:ifc:name = "Roof slab"
+                    string aeco:id = "61560a5d-6bc7-5726-a2de-67f85b6453fb"
+
+                    def Cube "Geom" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "61560a5d-6bc7-5726-a2de-67f85b6453fb"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.26, 0.31, 0.35)]
+                        double size = 1
+                        double3 xformOp:scale = (6.8, 4.8, 0.2)
+                        double3 xformOp:translate = (0, 0, 3)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+                }
+
+                def Xform "WindowMain" (
+                    prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                )
+                {
+                    string aeco:class:ifc:code = "IfcWindow.WINDOW"
+                    string aeco:class:ifc:name = "Window"
+                    string aeco:id = "19d301ec-012c-550d-94f8-078b2375abad"
+
+                    def Cube "Glazing" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "19d301ec-012c-550d-94f8-078b2375abad"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.16, 0.48, 0.64)]
+                        double size = 1
+                        double3 xformOp:scale = (0.025, 1.08, 1.08)
+                        double3 xformOp:translate = (-3.11, 0, 1.7)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+
+                    def Cube "JambFront" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "19d301ec-012c-550d-94f8-078b2375abad"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.18, 0.2, 0.21)]
+                        double size = 1
+                        double3 xformOp:scale = (0.24, 0.06, 1.2)
+                        double3 xformOp:translate = (-3.12, -0.57, 1.7)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+
+                    def Cube "JambBack" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "19d301ec-012c-550d-94f8-078b2375abad"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.18, 0.2, 0.21)]
+                        double size = 1
+                        double3 xformOp:scale = (0.24, 0.06, 1.2)
+                        double3 xformOp:translate = (-3.12, 0.57, 1.7)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+
+                    def Cube "Sill" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "19d301ec-012c-550d-94f8-078b2375abad"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.18, 0.2, 0.21)]
+                        double size = 1
+                        double3 xformOp:scale = (0.24, 1.2, 0.06)
+                        double3 xformOp:translate = (-3.12, 0, 1.13)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+
+                    def Cube "Head" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "19d301ec-012c-550d-94f8-078b2375abad"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.18, 0.2, 0.21)]
+                        double size = 1
+                        double3 xformOp:scale = (0.24, 1.2, 0.06)
+                        double3 xformOp:translate = (-3.12, 0, 2.27)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+
+                    def Cube "Mullion" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "19d301ec-012c-550d-94f8-078b2375abad"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.18, 0.2, 0.21)]
+                        double size = 1
+                        double3 xformOp:scale = (0.08, 0.035, 1.08)
+                        double3 xformOp:translate = (-3.14, 0, 1.7)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+                }
+
+                def AecoSpace "Room" (
+                    prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+                    doc = "Clear room dimensions: 6 x 4 x 2.7 metres above a 0.2 metre floor slab."
+                )
+                {
+                    string aeco:class:ifc:code = "IfcSpace"
+                    string aeco:id = "032ab789-ff52-5507-a3e1-763949541d69"
+                }
+
+                def AecoSpace "Corridor" (
+                    prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+                    doc = "A 1.2 x 2 metre open approach corridor with low side walls."
+                )
+                {
+                    string aeco:class:ifc:code = "IfcSpace"
+                    string aeco:id = "77a543a6-6207-55c2-869e-3a6d89142a6d"
+
+                    def Xform "Slab" (
+                        prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                    )
+                    {
+                        string aeco:class:ifc:code = "IfcSlab.FLOOR"
+                        string aeco:class:ifc:name = "Corridor Slab"
+                        string aeco:id = "ba227136-dfd1-5e65-8f0a-e41d37adfe34"
+
+                        def Cube "Geom" (
+                            prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                        )
+                        {
+                            uniform token aeco:derived:approx = "exact"
+                            uniform token aeco:derived:role = "body"
+                            string aeco:derived:source = "ba227136-dfd1-5e65-8f0a-e41d37adfe34"
+                            string aeco:derived:stamp = "small building 0.9.2"
+                            double aeco:derived:tolerance = 0.000001
+                            float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                            color3f[] primvars:displayColor = [(0.4, 0.45, 0.49)]
+                            double size = 1
+                            double3 xformOp:scale = (1.6, 2, 0.2)
+                            double3 xformOp:translate = (-1.5, -3.2, 0.1)
+                            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                        }
+                    }
+
+                    def Xform "WallLeft" (
+                        prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                    )
+                    {
+                        string aeco:class:ifc:code = "IfcWall.PARTITIONING"
+                        string aeco:class:ifc:name = "Corridor WallLeft"
+                        string aeco:id = "5a941e13-f72d-5d1b-a6ea-a2dd40e0400d"
+
+                        def Cube "Geom" (
+                            prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                        )
+                        {
+                            uniform token aeco:derived:approx = "exact"
+                            uniform token aeco:derived:role = "body"
+                            string aeco:derived:source = "5a941e13-f72d-5d1b-a6ea-a2dd40e0400d"
+                            string aeco:derived:stamp = "small building 0.9.2"
+                            double aeco:derived:tolerance = 0.000001
+                            float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                            color3f[] primvars:displayColor = [(0.79, 0.74, 0.64)]
+                            double size = 1
+                            double3 xformOp:scale = (0.2, 2, 1.1)
+                            double3 xformOp:translate = (-2.2, -3.2, 0.75)
+                            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                        }
+                    }
+
+                    def Xform "WallRight" (
+                        prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                    )
+                    {
+                        string aeco:class:ifc:code = "IfcWall.PARTITIONING"
+                        string aeco:class:ifc:name = "Corridor WallRight"
+                        string aeco:id = "391fd7f9-fed9-5f95-8ad1-7ad578bb6db7"
+
+                        def Cube "Geom" (
+                            prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                        )
+                        {
+                            uniform token aeco:derived:approx = "exact"
+                            uniform token aeco:derived:role = "body"
+                            string aeco:derived:source = "391fd7f9-fed9-5f95-8ad1-7ad578bb6db7"
+                            string aeco:derived:stamp = "small building 0.9.2"
+                            double aeco:derived:tolerance = 0.000001
+                            float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                            color3f[] primvars:displayColor = [(0.79, 0.74, 0.64)]
+                            double size = 1
+                            double3 xformOp:scale = (0.2, 2, 1.1)
+                            double3 xformOp:translate = (-0.8, -3.2, 0.75)
+                            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                        }
+                    }
+                }
+
+                def Xform "CableTray" (
+                    prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                )
+                {
+                    string aeco:class:ifc:code = "IfcCableCarrierSegment.CABLETRAYSEGMENT"
+                    string aeco:class:ifc:name = "Cable tray"
+                    string aeco:id = "d1629468-e1f5-5b39-8aca-c39fd8217a67"
+
+                    def Cube "Base" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "d1629468-e1f5-5b39-8aca-c39fd8217a67"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.62, 0.3, 0.055)]
+                        double size = 1
+                        double3 xformOp:scale = (0.28, 2, 0.035)
+                        double3 xformOp:translate = (-3.5, -0.4, 2.5)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+
+                    def Cube "InnerRail" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "d1629468-e1f5-5b39-8aca-c39fd8217a67"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.62, 0.3, 0.055)]
+                        double size = 1
+                        double3 xformOp:scale = (0.025, 2, 0.12)
+                        double3 xformOp:translate = (-3.37, -0.4, 2.56)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+
+                    def Cube "OuterRail" (
+                        prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                    )
+                    {
+                        uniform token aeco:derived:approx = "exact"
+                        uniform token aeco:derived:role = "body"
+                        string aeco:derived:source = "d1629468-e1f5-5b39-8aca-c39fd8217a67"
+                        string aeco:derived:stamp = "small building 0.9.2"
+                        double aeco:derived:tolerance = 0.000001
+                        float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                        color3f[] primvars:displayColor = [(0.62, 0.3, 0.055)]
+                        double size = 1
+                        double3 xformOp:scale = (0.025, 2, 0.12)
+                        double3 xformOp:translate = (-3.63, -0.4, 2.56)
+                        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                    }
+                }
+            }
+
+            def AecoLevel "Level2"
+            {
+                double aeco:elevation = 3.2
+                string aeco:id = "bdc579dd-abc4-5c32-bc91-2b1abb862c26"
+                double3 xformOp:translate = (0, 0, 3.2)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+
+                def AecoSpace "Bathroom" (
+                    prepend apiSchemas = ["AecoClassificationAPI:ifc", "AecoClassificationAPI:uniclass"]
+                )
+                {
+                    string aeco:class:ifc:code = "IfcSpace"
+                    string aeco:class:ifc:name = "Space"
+                    string aeco:class:uniclass:code = "SL_35_10_08"
+                    string aeco:class:uniclass:name = "Bathrooms"
+                    string aeco:id = "671b0c5c-3d63-5f4c-a9c3-45d7a160e32b"
+
+                    def Xform "CWBranch" (
+                        prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                    )
+                    {
+                        string aeco:class:ifc:code = "IfcPipeSegment.RIGIDSEGMENT"
+                        string aeco:class:ifc:name = "Pipe Segment"
+                        string aeco:id = "97a4fd1b-9b00-5103-9cd6-fcb75b6d2f4e"
+                        double aeco:props:Pset_PipeSegmentTypeCommon:NominalDiameter = 15
+
+                        def AecoPort "In"
+                        {
+                            prepend rel aeco:connectedPorts = </SmallProject/Site/Building/Level1/CWRiser/Out>
+                            uniform token aeco:flowDirection = "sink"
+                            string aeco:id = "705afc4c-50b2-5147-8b27-a1d685feb880"
+                            uniform token aeco:medium = "pipe"
+                            double3 xformOp:translate = (-3.5, 1.4, 0.5)
+                            uniform token[] xformOpOrder = ["xformOp:translate"]
+                        }
+
+                        def AecoPort "Out"
+                        {
+                            prepend rel aeco:connectedPorts = </SmallProject/Site/Building/Level2/Bathroom/Basin/In>
+                            uniform token aeco:flowDirection = "source"
+                            string aeco:id = "92873f7c-9bef-55d4-943a-f9c1143eb33b"
+                            uniform token aeco:medium = "pipe"
+                            double3 xformOp:translate = (-1, 1.4, 0.5)
+                            uniform token[] xformOpOrder = ["xformOp:translate"]
+                        }
+
+                        def BasisCurves "Axis" (
+                            prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                        )
+                        {
+                            uniform token aeco:derived:approx = "exact"
+                            uniform token aeco:derived:role = "axis"
+                            string aeco:derived:source = "97a4fd1b-9b00-5103-9cd6-fcb75b6d2f4e"
+                            string aeco:derived:stamp = "small building 0.9.2"
+                            double aeco:derived:tolerance = 0.000001
+                            int[] curveVertexCounts = [2]
+                            float3[] extent = [(-3.5, 1.4, 0.5), (-1, 1.4, 0.5)]
+                            point3f[] points = [(-3.5, 1.4, 0.5), (-1, 1.4, 0.5)]
+                            color3f[] primvars:displayColor = [(0.03, 0.3, 0.85)]
+                            uniform token purpose = "guide"
+                            uniform token type = "linear"
+                            float[] widths = [0.035] (
+                                interpolation = "constant"
+                            )
+                            uniform token wrap = "nonperiodic"
+                        }
+
+                        def Cylinder "Geom" (
+                            prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                        )
+                        {
+                            uniform token aeco:derived:approx = "exact"
+                            uniform token aeco:derived:role = "body"
+                            string aeco:derived:source = "97a4fd1b-9b00-5103-9cd6-fcb75b6d2f4e"
+                            string aeco:derived:stamp = "small building 0.9.2"
+                            double aeco:derived:tolerance = 0.000001
+                            uniform token axis = "Z"
+                            float3[] extent = [(-0.015, -0.015, -1.25), (0.015, 0.015, 1.25)]
+                            double height = 2.5
+                            color3f[] primvars:displayColor = [(0.055, 0.29, 0.64)]
+                            double radius = 0.015
+                            quatd xformOp:orient = (0.7071067811865476, 0, 0.7071067811865475, 0)
+                            double3 xformOp:translate = (-2.25, 1.4, 0.5)
+                            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+                        }
+                    }
+
+                    def Xform "Basin" (
+                        delete apiSchemas = ["SemanticsLabelsAPI:kind"]
+                        prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                    )
+                    {
+                        string aeco:class:ifc:code = "IfcSanitaryTerminal.WASHHANDBASIN"
+                        string aeco:class:ifc:name = "Sanitary Terminal (wash hand basin)"
+                        string aeco:id = "1a64c483-4299-5514-a08f-b3f9122adf2b"
+
+                        def AecoPort "In"
+                        {
+                            prepend rel aeco:connectedPorts = </SmallProject/Site/Building/Level2/Bathroom/CWBranch/Out>
+                            uniform token aeco:flowDirection = "sink"
+                            string aeco:id = "83910000-6812-5f25-a039-391dc3d4efaa"
+                            uniform token aeco:medium = "pipe"
+                            double3 xformOp:translate = (-1, 1.4, 0.5)
+                            uniform token[] xformOpOrder = ["xformOp:translate"]
+                        }
+
+                        def Cube "Geom" (
+                            prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                        )
+                        {
+                            uniform token aeco:derived:approx = "exact"
+                            uniform token aeco:derived:role = "body"
+                            string aeco:derived:source = "1a64c483-4299-5514-a08f-b3f9122adf2b"
+                            string aeco:derived:stamp = "small building 0.9.2"
+                            double aeco:derived:tolerance = 0.000001
+                            float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                            color3f[] primvars:displayColor = [(0.87, 0.9, 0.9)]
+                            double size = 1
+                            double3 xformOp:scale = (0.6, 0.5, 0.14)
+                            double3 xformOp:translate = (-0.7, 1.4, 0.5)
+                            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                        }
+
+                        def Cube "Pedestal" (
+                            prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+                        )
+                        {
+                            uniform token aeco:derived:approx = "exact"
+                            uniform token aeco:derived:role = "body"
+                            string aeco:derived:source = "1a64c483-4299-5514-a08f-b3f9122adf2b"
+                            string aeco:derived:stamp = "small building 0.9.2"
+                            double aeco:derived:tolerance = 0.000001
+                            float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+                            color3f[] primvars:displayColor = [(0.55, 0.6, 0.6)]
+                            double size = 1
+                            double3 xformOp:scale = (0.36, 0.32, 0.52)
+                            double3 xformOp:translate = (-0.7, 1.4, 0.16)
+                            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    def Scope "Systems"
+    {
+        def AecoSystem "DomesticColdWater" (
+            prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+            displayName = "Domestic Cold Water"
+        )
+        {
+            string aeco:class:ifc:code = "IfcDistributionSystem.DOMESTICCOLDWATER"
+            string aeco:class:ifc:name = "Distribution System (domestic cold water)"
+            string aeco:id = "e9f6b301-f133-5f40-82b8-95a349687722"
+            prepend rel aeco:serves = </SmallProject/Site/Building>
+            prepend rel collection:members:includes = [
+                </SmallProject/Site/Building/Level1/CWEntry>,
+                </SmallProject/Site/Building/Level1/CWRiser>,
+                </SmallProject/Site/Building/Level2/Bathroom/CWBranch>,
+                </SmallProject/Site/Building/Level2/Bathroom/Basin>,
+            ]
+        }
+    }
+}
+
+class "_TypeCatalog"
+{
+    class "ExternalCavityWall" (
+        prepend apiSchemas = ["AecoTypeAPI", "AecoClassificationAPI:uniclass", "AecoClassificationAPI:ifc"]
+    )
+    {
+        string aeco:class:ifc:code = "IfcWall.SOLIDWALL"
+        string aeco:class:ifc:name = "Wall (solid)"
+        string aeco:class:ifc:uri = "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/IfcWall"
+        string aeco:class:uniclass:code = "Ss_25_10_20"
+        string aeco:class:uniclass:name = "Wall systems"
+        string aeco:class:uniclass:uri = "https://uniclass.thenbs.com/taxon/ss_25_10_20"
+        string aeco:type:manufacturer = "Example Masonry Ltd"
+        string aeco:type:model = "Cavity wall 300 (102.5 / 100 / 100)"
+    }
+}
+

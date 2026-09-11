@@ -1,0 +1,52 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 1
+    upAxis = "Z"
+    fallbackPrimTypes = {
+        token[] AecoFacility = ["Xform"]
+    }
+)
+def Xform "World" {
+    def AecoFacility "Facility" {
+        string aeco:id = "3b21bde9-e5aa-429c-a122-d7f8685af0ea"
+        def Xform "Element" (
+            prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+        ) {
+            string aeco:id = "3b21bde9-e5aa-429c-a122-d7f8685af0eb"
+            string aeco:class:ifc:code = "IfcBuildingElementProxy"
+            double3 xformOp:translate = (2, 3, 4)
+            uniform token[] xformOpOrder = ["xformOp:translate"]
+            # Deliberately unknown to the core runtime. No fallback is authored.
+            # This fixture proves composition and correlation, not Brep validity.
+            def BrepArray "BodyExact" (
+                prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+            ) {
+                uniform token purpose = "render"
+                uniform token aeco:derived:role = "body"
+                uniform token aeco:derived:approx = "exact"
+                double aeco:derived:tolerance = 0.000001
+                string aeco:derived:source = "3b21bde9-e5aa-429c-a122-d7f8685af0eb"
+                string aeco:derived:stamp = "fixture 0.9.0"
+                rel proxyPrim = </World/Facility/Element/Body>
+            }
+            def Mesh "Body" (
+                prepend apiSchemas = ["AecoDerivedGeometryAPI"]
+            ) {
+                uniform token purpose = "proxy"
+                uniform token aeco:derived:role = "body"
+                uniform token aeco:derived:approx = "tessellated"
+                double aeco:derived:tolerance = 0.001
+                string aeco:derived:source = "3b21bde9-e5aa-429c-a122-d7f8685af0eb"
+                string aeco:derived:stamp = "fixture 0.9.0"
+                rel aeco:derived:from = </World/Facility/Element/BodyExact>
+                uniform token subdivisionScheme = "none"
+                point3f[] points = [(-1,-1,-1),(1,-1,-1),(1,1,-1),(-1,1,-1),(-1,-1,1),(1,-1,1),(1,1,1),(-1,1,1)]
+                int[] faceVertexCounts = [4,4,4,4,4,4]
+                int[] faceVertexIndices = [0,3,2,1,4,5,6,7,0,1,5,4,1,2,6,5,2,3,7,6,3,0,4,7]
+                float3[] extent = [(-1,-1,-1),(1,1,1)]
+                color3f[] primvars:displayColor = [(0.2,0.55,0.8)]
+            }
+        }
+    }
+}

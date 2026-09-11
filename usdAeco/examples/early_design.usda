@@ -1,0 +1,96 @@
+#usda 1.0
+(
+    defaultPrim = "EarlyDesign"
+    fallbackPrimTypes = {
+        token[] AecoFacility = ["Xform"]
+        token[] AecoFacilityPart = ["Xform"]
+        token[] AecoLevel = ["Xform"]
+        token[] AecoPort = ["Xform"]
+        token[] AecoSite = ["Xform"]
+        token[] AecoSpace = ["Xform"]
+        token[] AecoSystem = ["Scope"]
+        token[] AecoZone = ["Scope"]
+    }
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "EarlyDesign" (
+    prepend apiSchemas = ["AecoProjectAPI"]
+    kind = "assembly"
+)
+{
+    string aeco:project:id = "4db5f5ad-a3a6-52f5-b5f1-f0a933b9c373"
+    string aeco:project:name = "Early-stage spatial model"
+
+    def AecoSite "Site"
+    {
+        string aeco:id = "82ac5ea5-923f-5d95-b94c-cee274b6506d"
+
+        def AecoFacility "HQ" (
+            prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+        )
+        {
+            string aeco:class:ifc:code = "IfcBuilding"
+            string aeco:class:ifc:name = "Building"
+            string aeco:id = "7eb031a6-3a15-541e-ba1f-220c88e64dc9"
+
+            def AecoLevel "L0"
+            {
+                double aeco:elevation = 0
+                string aeco:id = "c939cd59-7122-580b-8162-a019365e60e5"
+
+                def AecoSpace "Lobby" (
+                    prepend apiSchemas = ["AecoClassificationAPI:uniclass"]
+                )
+                {
+                    string aeco:class:uniclass:code = "SL_45_10_63"
+                    string aeco:class:uniclass:name = "Reception spaces"
+                    string aeco:id = "f4a2133b-90ad-55cc-95a4-bf9084a4b8ad"
+                }
+            }
+
+            def AecoLevel "L1"
+            {
+                double aeco:elevation = 4.5
+                string aeco:id = "4dd89cef-f993-5f32-893b-6571349e7dc4"
+
+                def AecoSpace "OpenPlan"
+                {
+                    string aeco:id = "615496d4-1509-534c-860e-5fd25f5be51b"
+
+                    def AecoSpace "MeetingArea"
+                    {
+                        string aeco:id = "179420e8-5983-59a0-bf2e-eb11ec46fa9e"
+                    }
+                }
+            }
+        }
+    }
+
+    def Scope "Systems"
+    {
+        def AecoSystem "ComfortCooling" (
+            displayName = "Comfort cooling (concept)"
+            prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+        )
+        {
+            string aeco:class:ifc:code = "IfcDistributionSystem.AIRCONDITIONING"
+            string aeco:id = "468311fb-fd8f-580d-9e8f-a78691cad6bc"
+            prepend rel aeco:serves = </EarlyDesign/Site/HQ>
+        }
+    }
+
+    def Scope "Zones"
+    {
+        def AecoZone "Finance" (
+            displayName = "Finance department"
+            prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+        )
+        {
+            string aeco:class:ifc:code = "IfcSpatialZone.OCCUPANCY"
+            string aeco:id = "31002e65-2726-54cf-8c52-46bf805e3a5c"
+            prepend rel collection:members:includes = </EarlyDesign/Site/HQ/L1/OpenPlan>
+        }
+    }
+}

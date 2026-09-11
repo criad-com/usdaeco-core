@@ -1,0 +1,11 @@
+{
+  "renders": [
+    {
+      "path": "userDoc/usdAecoExample.png",
+      "sha256": "0ff6947afd3a15b77991e9d19000ee9016878da135f300f084491dd4dbad39c5",
+      "width": 1280,
+      "height": 800,
+      "bytes": 74685
+    }
+  ]
+}

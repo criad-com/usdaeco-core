@@ -1,0 +1,298 @@
+#usda 1.0
+(
+    defaultPrim = "Metro"
+    fallbackPrimTypes = {
+        token[] AecoFacility = ["Xform"]
+        token[] AecoFacilityPart = ["Xform"]
+        token[] AecoLevel = ["Xform"]
+        token[] AecoPort = ["Xform"]
+        token[] AecoSite = ["Xform"]
+        token[] AecoSpace = ["Xform"]
+        token[] AecoSystem = ["Scope"]
+        token[] AecoZone = ["Scope"]
+    }
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "Metro" (
+    prepend apiSchemas = ["AecoProjectAPI"]
+    kind = "assembly"
+)
+{
+    string aeco:project:id = "c1d528fd-42b7-5305-88ba-8ac240a8e4bf"
+    string aeco:project:name = "Metro quarter"
+
+    def AecoSite "Campus"
+    {
+        string aeco:id = "c90c7a46-7416-54ce-9f21-df7eb4ec1752"
+
+        def AecoSite "ParcelNorth"
+        {
+            string aeco:id = "092605e4-af7e-5248-a702-29339e712109"
+
+            def AecoFacility "Development" (
+                prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+            )
+            {
+                string aeco:class:ifc:code = "IfcBuilding"
+                string aeco:class:ifc:name = "Building"
+                string aeco:id = "e37658de-21c2-544d-92b0-aa5e79e08ef7"
+
+                def Scope "Parts"
+                {
+                    def AecoFacilityPart "Podium"
+                    {
+                        string aeco:id = "53df5bc6-098d-58f4-8a50-5fc0f3208b30"
+
+                        def AecoLevel "B1"
+                        {
+                            double aeco:elevation = -3.5
+                            string aeco:id = "ceb361ac-31a7-5e87-a466-6223242f6748"
+                            double3 xformOp:translate = (0, 0, -3.5)
+                            uniform token[] xformOpOrder = ["xformOp:translate"]
+                        }
+
+                        def AecoLevel "L0"
+                        {
+                            double aeco:elevation = 0
+                            string aeco:id = "5244e5e6-1ba4-52ce-9269-d7b346a831eb"
+                            double3 xformOp:translate = (0, 0, 0)
+                            uniform token[] xformOpOrder = ["xformOp:translate"]
+
+                            def AecoSpace "Lobby"
+                            {
+                                string aeco:id = "030b5dc4-be76-599d-a304-adc115a95236"
+
+                                def AecoSpace "ReceptionZone"
+                                {
+                                    string aeco:id = "11ee8c68-d50f-5265-9ac2-14a36bd6287e"
+                                }
+                            }
+
+                            def AecoLevel "Mezzanine"
+                            {
+                                double aeco:elevation = 2.1
+                                string aeco:id = "84a066a8-49e9-57ca-9674-c3a12741fe35"
+                                double3 xformOp:translate = (0, 0, 2.1)
+                                uniform token[] xformOpOrder = ["xformOp:translate"]
+                            }
+
+                            def Xform "CWEntry" (
+                                prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                            )
+                            {
+                                string aeco:class:ifc:code = "IfcPipeSegment"
+                                string aeco:id = "96baf4d3-dd60-5366-82e0-05e6ea282c0b"
+
+                                def AecoPort "Out"
+                                {
+                                    prepend rel aeco:connectedPorts = </Metro/Campus/ParcelNorth/Development/Parts/TowerA/A_L1/CWRiser/In>
+                                    uniform token aeco:flowDirection = "source"
+                                    string aeco:id = "305a86a1-b457-5952-9399-774f747222f0"
+                                    uniform token aeco:medium = "pipe"
+                                }
+                            }
+                        }
+                    }
+
+                    def AecoFacilityPart "TowerA"
+                    {
+                        string aeco:id = "4b937e39-ae17-50a2-b2ec-ec0ca5be3c00"
+
+                        def AecoLevel "A_L1"
+                        {
+                            double aeco:elevation = 6
+                            string aeco:id = "53934312-e546-5dfe-a400-57451c6d377b"
+                            double3 xformOp:translate = (0, 0, 6)
+                            uniform token[] xformOpOrder = ["xformOp:translate"]
+
+                            def Xform "WallNorth" (
+                                prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                            )
+                            {
+                                string aeco:class:ifc:code = "IfcWall"
+                                string aeco:id = "845e8799-3ceb-51b2-8ef2-b0182614a53a"
+                            }
+
+                            def Xform "CWRiser" (
+                                prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                            )
+                            {
+                                string aeco:class:ifc:code = "IfcPipeSegment"
+                                string aeco:id = "56754834-4ec9-516a-b75b-0a27511e4438"
+                                prepend rel aeco:referencedContainers = </Metro/Campus/ParcelNorth/Development/Parts/TowerA/A_L2>
+
+                                def AecoPort "In"
+                                {
+                                    prepend rel aeco:connectedPorts = </Metro/Campus/ParcelNorth/Development/Parts/Podium/L0/CWEntry/Out>
+                                    uniform token aeco:flowDirection = "sink"
+                                    string aeco:id = "6ca842df-8a8f-546c-adf6-92d2a8128366"
+                                    uniform token aeco:medium = "pipe"
+                                }
+                            }
+
+                            def Xform "CurtainWallEast" (
+                                prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                            )
+                            {
+                                string aeco:class:ifc:code = "IfcCurtainWall"
+                                string aeco:id = "c06471bb-3184-571f-903c-40903830555f"
+
+                                def Xform "PassDoor" (
+                                    prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                                )
+                                {
+                                    string aeco:class:ifc:code = "IfcDoor"
+                                    string aeco:id = "c1fb33fc-a7b7-528d-a329-43a74c810c3f"
+                                }
+                            }
+                        }
+
+                        def AecoLevel "A_L2"
+                        {
+                            double aeco:elevation = 9.5
+                            string aeco:id = "ecca7b42-5f91-5e6f-935b-c93774aea9dc"
+                            double3 xformOp:translate = (0, 0, 9.5)
+                            uniform token[] xformOpOrder = ["xformOp:translate"]
+
+                            def AecoSpace "Bathroom"
+                            {
+                                string aeco:id = "ec77a73f-43de-52eb-baf0-8b9ac5407e8f"
+                            }
+
+                            def Xform "SkyBridge" (
+                                prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                            )
+                            {
+                                string aeco:class:ifc:code = "IfcElementAssembly.USERDEFINED"
+                                string aeco:class:ifc:name = "Element Assembly (skybridge)"
+                                string aeco:id = "07ef25f4-da8b-50bd-b1a5-49677c74d3df"
+                                prepend rel aeco:referencedContainers = </Metro/Campus/ParcelNorth/Development/Parts/TowerB/B_L1>
+                            }
+                        }
+                    }
+
+                    def AecoFacilityPart "TowerB"
+                    {
+                        string aeco:id = "b84eea51-91c1-5389-a8bf-eb2f070000e2"
+
+                        def AecoLevel "B_L1" (
+                            variants = {
+                                string designOption = "layoutA"
+                            }
+                            prepend variantSets = "designOption"
+                        )
+                        {
+                            double aeco:elevation = 6
+                            string aeco:id = "cac52d26-9e8e-572d-8904-cc59ff8231ae"
+                            double3 xformOp:translate = (0, 0, 6)
+                            uniform token[] xformOpOrder = ["xformOp:translate"]
+                            variantSet "designOption" = {
+                                "layoutA" {
+                                    def AecoSpace "OfficeA1"
+                                    {
+                                        string aeco:id = "9f27edd8-264f-5b94-a1a7-a9a5a5d0c5dd"
+                                    }
+
+                                    def AecoSpace "OfficeA2"
+                                    {
+                                        string aeco:id = "52ff884c-3808-5b0d-94e4-cbbd925d5ab2"
+                                    }
+
+                                }
+                                "layoutB" {
+                                    def AecoSpace "OpenPlanB"
+                                    {
+                                        string aeco:id = "5e7f1721-9251-5b82-9c58-d794bb57e2f8"
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+
+                def AecoSpace "Atrium"
+                {
+                    string aeco:id = "d644b47f-18fd-5248-9eda-dba73b5b17f2"
+                }
+            }
+
+            def AecoSpace "Plaza"
+            {
+                string aeco:id = "03145689-7d89-503c-870c-84802f9f1c0b"
+            }
+
+            def Xform "SiteDrain" (
+                prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+            )
+            {
+                string aeco:class:ifc:code = "IfcPipeSegment.GUTTER"
+                string aeco:id = "4dde7209-7752-5ba2-925b-f6581fd4d076"
+            }
+        }
+
+        def AecoSite "ParcelSouth"
+        {
+            string aeco:id = "b33f9d82-9fd5-5512-9c26-b4dc968c3d9a"
+
+            def AecoFacility "AccessRoad" (
+                prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+            )
+            {
+                string aeco:class:ifc:code = "IfcRoad"
+                string aeco:class:ifc:name = "Road"
+                string aeco:id = "2ca7fbc7-b32f-56ac-bb3e-2d1fe8121f89"
+
+                def AecoFacilityPart "Section10" (
+                    prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+                )
+                {
+                    string aeco:class:ifc:code = "IfcRoadPart.ROADSEGMENT"
+                    string aeco:class:ifc:name = "Road Part (segment)"
+                    string aeco:id = "f06610ba-e9d3-5dcf-b75a-82d5ffd9b46f"
+
+                    def AecoFacilityPart "Seg10_1"
+                    {
+                        string aeco:id = "0cf4c29c-25e4-50e4-8665-070059e7f1eb"
+                    }
+                }
+            }
+        }
+    }
+
+    def Scope "Zones"
+    {
+        def AecoZone "FireCompartmentFC1" (
+            displayName = "Fire compartment FC1"
+            prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+        )
+        {
+            string aeco:class:ifc:code = "IfcSpatialZone.FIRESAFETY"
+            string aeco:id = "1ec53345-e096-599c-8bf1-194eb5e39d97"
+            prepend rel collection:members:includes = [
+                </Metro/Campus/ParcelNorth/Development/Parts/Podium/L0/Lobby>,
+                </Metro/Campus/ParcelNorth/Development/Parts/TowerA/A_L2/Bathroom>,
+            ]
+        }
+
+        def AecoZone "ConstructionZoneCZ2" (
+            prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+        )
+        {
+            string aeco:class:ifc:code = "IfcSpatialZone.CONSTRUCTION"
+            string aeco:id = "2ae81c4b-f0e6-5f90-9398-49119124acdd"
+            prepend rel collection:members:includes = </Metro/Campus/ParcelNorth/Development/Parts/TowerB>
+        }
+
+        def AecoZone "DesignOptionStudy"
+        {
+            string aeco:id = "7099b3be-55b2-5b79-8cde-327d01454776"
+            prepend rel collection:members:includes = [
+                </Metro/Campus/ParcelNorth/Development/Parts/TowerB/B_L1/OfficeA1>,
+                </Metro/Campus/ParcelNorth/Development/Parts/TowerB/B_L1/OpenPlanB>,
+            ]
+        }
+    }
+}

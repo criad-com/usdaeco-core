@@ -1,0 +1,550 @@
+#usda 1.0
+(
+    """ usdAeco — the core AECO schema domain for OpenUSD (v0.9.1).
+
+    The smallest set of stable, cross-discipline concepts every dataset
+    about a built thing shares — the spatial structure, the identity of
+    every element, what things ARE (by classification), how they are
+    grouped (systems, zones) and how they connect (ports), and the
+    type/occurrence relation — expressed as codeless schemas loadable by
+    any vanilla USD runtime.
+
+    The core describes referents and their shared semantics. Additional
+    data decorates these referents through applied APIs in separate
+    namespaces. The core carries no dates, status, money or taxonomy
+    of its own.
+
+    Two closed type sets — five spatial types over AecoSpatialBase, two
+    group types over AecoGroupBase — plus AecoPort and five applied
+    schemas. Kind is always classification (AecoClassificationAPI).
+    The representation mark (AecoDerivedGeometryAPI) and the registered
+    aecoDerived property metadatum support every geometry route. No path drivers are required by the core.
+
+    Naming: usdAeco / Aeco* / aeco: are the final names. Rule labels
+    (D-, B-, E-, R-numbers) refer to the design documents in docs/.
+    """
+    subLayers = [
+        @usd/schema.usda@,
+        @usdGeom/schema.usda@
+    ]
+)
+
+over "GLOBAL" (
+    customData = {
+        string libraryName      = "usdAeco"
+        string libraryPath      = "./"
+        bool skipCodeGeneration = true
+        bool useLiteralIdentifier = true
+        string aecoTier         = "core"
+        dictionary libraryTokens = {
+            dictionary members = {
+                string doc = """Name of the built-in CollectionAPI
+                instance on AecoGroupBase holding group membership."""
+            }
+        }
+    }
+) {
+}
+
+########################################################################
+# THE SPATIAL STRUCTURE — five spatial types, one containment grammar
+#
+# Domain truth (D2): containment is a tree whose PATTERN is universal —
+# sites (which nest), facilities on sites, parts subdividing facilities
+# (recursively: wing > storey > mezzanine; section > segment), spaces
+# bounded by any of them (recursively: open plan > work zone) — while
+# the KIND vocabulary (building/road/tunnel, wing/section, room/hall)
+# is sector-shaped and open. The level — the horizontal slice at a
+# datum — is the one part convention shared by every vertical facility,
+# and the only one that earns a typed specialization.
+#
+# Design commitment: SPATIAL TYPE = typed schema (closed, five,
+# core-governed); KIND = classification (open, late-bound,
+# bSDD/Uniclass/IFC URIs) — the same split element kind uses. Legal
+# nesting is a four-rule containment grammar with recursion at every
+# spatial type, enforced by validator at error tier. There is no role
+# attribute, no generic escape type, and no AecoBuilding: a building is
+# an AecoFacility classified as one — one encoding per concept.
+########################################################################
+
+class "AecoSpatialBase" (
+    inherits = </Xformable>
+    doc = """Abstract root of all AECO spatial containers. Containment
+    IS the USD namespace hierarchy: a prim's container is its NEAREST
+    spatial ancestor — organizational Scopes/Xforms may interleave and
+    are invisible to the grammar. Libraries MUST NOT subclass this base:
+    the spatial-type set is core-governed, and a genuinely new spatial
+    type enters the core additively under schema versioning. All
+    overlapping grouping is AecoGroupBase prims with a members
+    collection, never a second containment. Spatial prims are
+    referents: they carry identity and phase and nothing that could be
+    a statement about them (no status, no title-as-data, no ownership);
+    those are written ABOUT a container by the record tier."""
+    customData = {
+        string className = "SpatialBase"
+    }
+) {
+    string aeco:id = "" (
+        doc = """Stable, globally unique identity (lowercase hyphenated
+        UUID recommended) — the counterpart of IfcSpatialElement's
+        GlobalId. Shares one uniqueness space with element, group and
+        port ids. This is what makes tree restructuring a mechanical,
+        id-based repair (usdaeco_tools.repath) instead of a standing
+        threat to path-anchored overlays."""
+    )
+    uniform token aeco:phase = "proposed" (
+        allowedTokens = ["proposed", "existing", "demolished", "temporary"]
+        doc = """Lifecycle phase of this spatial container with respect
+        to this project — the asset clock (E12) on the spatial
+        structure itself, so a renovation models existing fabric and
+        the proposed remodel in ONE structure: an existing wing, a
+        proposed space, a temporary works enclosure. Same vocabulary
+        and fallback as the element-level aeco:phase. This is NOT
+        status: phase names which world the container belongs to, not
+        where a workflow stands. Finer 4D phasing belongs to the record
+        tier (activities + dates), never here."""
+    )
+}
+
+class AecoSite "AecoSite" (
+    inherits = </AecoSpatialBase>
+    doc = """An area of land or water under development. Sites NEST
+    (campus > parcels; estate > sites) — recursion replaces IFC's
+    CompositionType=COMPLEX flag. Sites may directly contain
+    facilities, spaces (plazas, courtyards, external regions — what
+    IFC4 needed IfcExternalSpatialElement for), and site-works
+    elements. Geodetic anchoring is deferred to the OpenUSD geospatial
+    work."""
+    customData = {
+        string className = "Site"
+        token[] fallbackTypes = ["Xform"]
+    }
+) {
+}
+
+class AecoFacility "AecoFacility" (
+    inherits = </AecoSpatialBase>
+    doc = """One built asset operated as a whole: a building, bridge,
+    road, tunnel, plant. WHAT KIND of facility it is comes from
+    classification (aeco:class:ifc:code = 'IfcBuilding' / 'IfcRoad' /
+    ...), never from subtypes — IFC4.3's own IfcFacility documentation
+    concedes the kind list is open-ended. A facility may NOT contain
+    another facility: a composite development (podium + two towers;
+    airport + terminals) is ONE facility whose major divisions are
+    AecoFacilityParts; separately-operated assets are sibling
+    facilities related by systems and references, not containment
+    (validator enforces, message points to AecoFacilityPart)."""
+    customData = {
+        string className = "Facility"
+        token[] fallbackTypes = ["Xform"]
+    }
+) {
+}
+
+class AecoFacilityPart "AecoFacilityPart" (
+    inherits = </AecoSpatialBase>
+    doc = """A structural subdivision of a facility: wing, block,
+    tower, podium, road section, track segment, process unit. CONCRETE
+    and RECURSIVE (wing > storey; section > segment) — kind is
+    classification, decomposition direction (IFC4.3's
+    VERTICAL/LONGITUDINAL/LATERAL/REGION UsageType) is classification
+    or downstream-library data. IFC4.3 re-enumerated part kinds as
+    compiled subtypes per sector (IfcRoadPart, IfcBridgePart, ...);
+    that re-enumeration is exactly the median-one-attribute disease
+    this core refuses."""
+    customData = {
+        string className = "FacilityPart"
+        token[] fallbackTypes = ["Xform"]
+    }
+) {
+}
+
+class AecoLevel "AecoLevel" (
+    inherits = </AecoFacilityPart>
+    doc = """The one universal facility part: a horizontal stratum at a
+    datum elevation — typed because every vertical facility on earth
+    shares this convention and schedules/sections key on it. Levels ARE
+    parts, so level > level comes free (mezzanines, split levels —
+    retiring IFC's CompositionType=PARTIAL hack). Facilities without
+    vertical stratification simply have no levels — valid, not
+    degenerate."""
+    customData = {
+        string className = "Level"
+        token[] fallbackTypes = ["Xform"]
+    }
+) {
+    double aeco:elevation = 0 (
+        doc = """Declarative datum elevation in the frame of the
+        nearest ancestor facility, along the stage up axis, in stage
+        linear units — used for ordering, schedules and sections.
+        Geometric placement remains xformOps as everywhere in USD; a
+        validator warns when the two diverge beyond tolerance (IFC's
+        storey Elevation attribute is now deprecated after decades of
+        drifting against ObjectPlacement: the documented cost of
+        leaving this redundancy ungoverned)."""
+    )
+}
+
+class AecoSpace "AecoSpace" (
+    inherits = </AecoSpatialBase>
+    doc = """A bounded usable region, interior or exterior — a room, a
+    hall, a yard, a corridor, an atrium, a plaza. Spaces NEST (open
+    plan > work zones) and may sit under a site, a facility, a
+    part/level, or another space. A zone's volumetric extent, when one
+    is needed, is an AecoSpace at its natural place in the tree,
+    grouped by the zone — covering IFC4's IfcSpatialZone without a
+    third spatial-ish entity family."""
+    customData = {
+        string className = "Space"
+        token[] fallbackTypes = ["Xform"]
+    }
+) {
+}
+
+########################################################################
+# GROUPS — the one overlay mechanism over the spatial structure
+#
+# Domain truth (D6): systems and zones overlay the tree and are
+# different things. A system is a functional service network — the
+# logical view of a service, distinct from its members. A zone is a
+# purpose grouping — fire compartment, HVAC zone, department. Both
+# reference members without containing them; membership never changes
+# where a thing IS; anything may belong to many groups.
+#
+# Design commitment: one abstract base carrying identity and a built-in
+# members collection; two concrete types because the domain language is
+# genuinely different and downstream APIs must target them separately.
+# The group carries NO register row (no title-as-data, status, owner):
+# those are statements about a group, outside the core. Generic selection
+# sets need no type at all: a plain CollectionAPI instance on any prim
+# is USD's own grouping.
+########################################################################
+
+class "AecoGroupBase" (
+    inherits = </Typed>
+    doc = """Abstract root of the two group types. Adds exactly two
+    things to a Typed prim: identity, and the built-in 'members'
+    collection (explicit targets or a pattern-based
+    membershipExpression; fallback expansionRule explicitOnly so
+    membership means exactly the targeted prims). A group IS its
+    members plus an identity — change the members and you have changed
+    the group. Grouping never changes where a thing is: an element or
+    region is in one place in the tree and of any number of groups.
+    Libraries MUST NOT subclass this base or add a second membership
+    mechanism; group KIND is classification (AecoClassificationAPI:ifc
+    code 'IfcDistributionSystem.DOMESTICCOLDWATER',
+    'IfcSpatialZone.FIRESAFETY'), refinement is applied schemas."""
+    prepend apiSchemas = ["CollectionAPI:members"]
+    customData = {
+        string className = "GroupBase"
+    }
+) {
+    string aeco:id = "" (
+        doc = """Stable unique identity (lowercase hyphenated UUID
+        recommended) — groups are addressable artifacts (systems in O&M
+        registries, compartments in fire strategies). Shares one
+        uniqueness space with spatial, element and port ids; the
+        counterpart of IfcGroup's GlobalId."""
+    )
+    uniform token collection:members:expansionRule = "explicitOnly" (
+        doc = """Schema-level fallback: membership is exactly the
+        targeted prims. Authors may opt into expandPrims or pattern
+        expressions per group."""
+    )
+}
+
+class AecoSystem "AecoSystem" (
+    inherits = </AecoGroupBase>
+    doc = """A functional service network — a piping run, an air loop,
+    a circuit, a structural frame, a containment route: the LOGICAL
+    view of a service, distinct from its spatially-placed members.
+    Kind-specific data (system type, circuit designation, service) is
+    contributed by applied schemas from downstream libraries that
+    declare apiSchemaCanOnlyApplyTo = ['AecoSystem']; nothing
+    subclasses it."""
+    customData = {
+        string className = "System"
+        token[] fallbackTypes = ["Scope"]
+    }
+) {
+    rel aeco:serves (
+        doc = """The spatial prims and/or zones this system functionally
+        serves — coarser than member connectivity and valid without any
+        modeled connectivity (a cold water system serves a building
+        before its pipes are drawn). A SYSTEM fact (a zone never
+        honestly served anything), which is why it lives here and not
+        on the base; the counterpart of IfcRelServicesBuildings,
+        generalized to any spatial type."""
+    )
+}
+
+class AecoZone "AecoZone" (
+    inherits = </AecoGroupBase>
+    doc = """A purpose-driven grouping of spaces/regions and/or
+    elements — a fire compartment, an HVAC zone, a security zone, a
+    department. Zones may overlap freely and never nest spatially.
+    Zero properties of its own: identity and members suffice — kept as
+    a distinct type because the domain language is genuinely different
+    (a fire compartment is not a service network) and so applied
+    schemas can target zones and systems separately. Where IFC
+    sanctions two encodings (IfcZone as a group; IfcSpatialZone with
+    its own extent), this is one: the extent, when needed, is an
+    AecoSpace in the tree grouped by the zone."""
+    customData = {
+        string className = "Zone"
+        token[] fallbackTypes = ["Scope"]
+    }
+) {
+}
+
+########################################################################
+# PORTS — typed connection points
+########################################################################
+
+class AecoPort "AecoPort" (
+    inherits = </Xformable>
+    doc = """A typed connection point on an element, authored as a child
+    prim so it has a transform (the physical connection location) and
+    can be targeted by relationships. Connectivity is the symmetric
+    aeco:connectedPorts relationship between ports; validators check
+    symmetry, flow-direction compatibility, and MEDIUM compatibility —
+    the core refuses incompatible stated media without any extension
+    schema loaded. Unspecified medium and direction are wildcards."""
+    customData = {
+        string className = "Port"
+        token[] fallbackTypes = ["Xform"]
+    }
+) {
+    uniform token purpose = "guide" (
+        doc = """Ports render as guide geometry by default (fallback
+        override of UsdGeomImageable purpose): connection points are
+        authoring/coordination aids, not model geometry, so vanilla
+        viewers hide them unless guides are enabled. Safe because ports
+        carry no renderable children."""
+    )
+    string aeco:id = "" (
+        doc = """Stable unique identity (ports are addressable for
+        commissioning and fabrication records)."""
+    )
+    uniform token aeco:medium = "undefined" (
+        allowedTokens = ["pipe", "duct", "cable", "cableCarrier",
+                         "wireless", "other", "undefined"]
+        doc = """What passes or connects at this port (vocabulary
+        aligned with IfcDistributionPortTypeEnum). Connected ports must
+        carry compatible media (validator-enforced)."""
+    )
+    uniform token aeco:flowDirection = "undefined" (
+        allowedTokens = ["source", "sink", "bidirectional", "undefined"]
+        doc = """Direction of flow at this port relative to its owning
+        element: 'source' emits, 'sink' receives, 'bidirectional' does
+        both (IFC SOURCEANDSINK)."""
+    )
+    rel aeco:connectedPorts (
+        doc = """The AecoPort prim(s) this port is physically connected
+        to. Author on both ends; validators flag asymmetric,
+        flow-incompatible or media-incompatible links."""
+    )
+}
+
+########################################################################
+# APPLIED API SCHEMAS — cross-cutting semantics on ANY prim
+########################################################################
+
+class "AecoProjectAPI" (
+    inherits = </APISchemaBase>
+    doc = """Applied to the root model prim of an AECO stage: marks it
+    as an AECO project and carries project identity. Units and up axis
+    remain UsdGeom stage metrics. Deliberately nothing else: stage-wide
+    conventions that only matter to a downstream tier (a calendar
+    epoch for derived 4D views, a reporting currency) are declared by
+    that tier's own root API, so the core never accumulates them."""
+    customData = {
+        string className = "ProjectAPI"
+        token[] apiSchemaCanOnlyApplyTo = ["Xform"]
+        token apiSchemaType = "singleApply"
+    }
+) {
+    string aeco:project:name = "" (
+        doc = """Human-readable project name."""
+    )
+    string aeco:project:id = "" (
+        doc = """Stable project identifier (UUID recommended) for
+        cross-tool and cross-repository correlation; the counterpart
+        of IfcProject.GlobalId."""
+    )
+}
+
+class "AecoElementAPI" (
+    inherits = </APISchemaBase>
+    doc = """The universal marker for 'this prim is a built element' —
+    a trait applied to any Imageable (Mesh, assembly, reference, future
+    BREP), never a parallel typed hierarchy. WHAT the element is comes
+    from classification instances against external dictionaries
+    (AecoClassificationAPI; the IFC entity is the recommended default
+    system because every authoring tool can emit it). The core never
+    enumerates element kinds and carries no census token of its own:
+    the coarse question 'all elements of a kind' is a classification query, and the
+    health metric is the share of elements with no classification at
+    all (or classified as a proxy) — the measurable version of IFC's
+    proxy abuse.
+
+    THE ELEMENT BOUNDARY: an element is where the containment grammar
+    STOPS. Below an element, namespace is assembly structure, not
+    spatial containment — an element nested inside an assembly is legal.
+    Its spatial container is the nearest spatial ancestor: containment
+    queries see THROUGH element subtrees. Spatial prims below an
+    element remain a validator warning, and a spatial
+    prim or port that itself wears this API is a validator error
+    (containers and ports are referents of a different kind)."""
+    customData = {
+        string className = "ElementAPI"
+        token apiSchemaType = "singleApply"
+        token[] apiSchemaCanOnlyApplyTo = ["Imageable"]
+    }
+) {
+    string aeco:id = "" (
+        doc = """Stable, globally unique element identity (lowercase
+        hyphenated UUID recommended) — the interchange join key, the
+        counterpart of IfcRoot.GlobalId in canonical form. Uniqueness
+        per stage is validator-enforced."""
+    )
+    uniform token aeco:phase = "proposed" (
+        allowedTokens = ["proposed", "existing", "demolished", "temporary"]
+        doc = """Lifecycle phase of the element with respect to this
+        project (the asset clock, E12). Finer 4D phasing belongs to
+        the record tier."""
+    )
+    rel aeco:referencedContainers (
+        doc = """Secondary spatial anchors: containers of ANY spatial
+        type, in ANY facility, that this element serves or spans beyond
+        its one primary container — a riser referencing upper levels, a
+        skybridge referencing the other tower's part, a culvert serving
+        the adjacent road section (the bijective counterpart of
+        IfcRelReferencedInSpatialStructure). Authored on the ELEMENT —
+        the discipline that owns the element owns this fact — never as
+        collections on other disciplines' spatial prims."""
+    )
+}
+
+class "AecoClassificationAPI" (
+    inherits = </APISchemaBase>
+    doc = """Multiple-apply classification hook — THE kind mechanism of
+    the core: each instance binds the prim to one entry of one external
+    classification system — apiSchemas = ["AecoClassificationAPI:ifc",
+    "AecoClassificationAPI:uniclass"] yields aeco:class:ifc:code etc.
+    Instance names are governed tokens (registries/
+    classification_systems.json) so two tools name the same dictionary
+    the same way; codes and URIs belong to the dictionary's publisher.
+    Applies to elements, spatial prims, groups and catalog types alike:
+    the kind of a facility ('IfcRoad'), of a system
+    ('IfcDistributionSystem.CHILLEDWATER') and of a wall
+    ('IfcWall.PARTITIONING', 'Ss_25_10_20') all ride one mechanism.
+    Several instances per prim are normal and expected."""
+    customData = {
+        string className = "ClassificationAPI"
+        token[] apiSchemaCanOnlyApplyTo = ["Typed"]
+        token apiSchemaType = "multipleApply"
+        token propertyNamespacePrefix = "aeco:class"
+    }
+) {
+    string code = "" (
+        doc = """The code within this instance's system, e.g.
+        'Ss_25_10_20' or 'IfcWall.PARTITIONING' (IFC entity, then
+        PredefinedType after a dot when one is set)."""
+    )
+    string name = "" (
+        doc = """Human-readable name of the classification entry."""
+    )
+    string uri = "" (
+        doc = """Resolvable dictionary URI (bSDD recommended), pinning
+        the exact system version."""
+    )
+}
+
+class "AecoTypeAPI" (
+    inherits = </APISchemaBase>
+    doc = """Marks a class prim as a catalog type (product/family
+    definition) and carries product identity. Occurrences compose the
+    type via an inherits arc — type/occurrence IS USD composition:
+    edits to the type broadcast; occurrence opinions override. Note
+    that applied schemas compose through inherits too, so an
+    occurrence resolves the type's manufacturer as its own (correct:
+    the manufacturer of the type IS the manufacturer of every
+    occurrence); enumerate the CATALOG over class prims
+    (Usd.PrimIsAbstract), not over HasAPI alone."""
+    customData = {
+        string className = "TypeAPI"
+        token[] apiSchemaCanOnlyApplyTo = ["Typed"]
+        token apiSchemaType = "singleApply"
+    }
+) {
+    string aeco:type:manufacturer = "" (
+        doc = """Manufacturer or system owner of the cataloged
+        product."""
+    )
+    string aeco:type:model = "" (
+        doc = """Model/product designation."""
+    )
+    string aeco:type:catalogUri = "" (
+        doc = """Resolvable product/catalog entry URI."""
+    )
+}
+
+########################################################################
+# THE DERIVED-GEOMETRY MARK (ADR-0007, ADR-0009)
+########################################################################
+
+class "AecoDerivedGeometryAPI" (
+    inherits = </APISchemaBase>
+    doc = """Marks a gprim as DERIVED from a referent by a tool: the
+    host's tessellated body, a stage-side proxy, the axis curve, a
+    footprint, a symbol, a spatial extent or an analytic guide.
+    Plain UsdGeom gprims plus this one applied
+    schema is the family's whole representation pattern (ADR-0002):
+    the mark adds no geometry type. Exact bodies carry Mesh twins so
+    every element renders in a vanilla runtime (B7). Geometry flows OUT
+    of hosts and stage-side derivations (E14). The gprim is a child of
+    its referent; aeco:derived:source repeats the referent's aeco:id so
+    the mark survives being referenced elsewhere."""
+    customData = {
+        string className = "DerivedGeometryAPI"
+        token apiSchemaType = "singleApply"
+        token[] apiSchemaCanOnlyApplyTo = ["Gprim"]
+    }
+) {
+    string aeco:derived:source = "" (
+        doc = """aeco:id of the element or spatial referent this gprim stands for."""
+    )
+    uniform token aeco:derived:role = "body" (
+        allowedTokens = ["body", "proxy", "axis", "footprint", "symbol",
+                         "extent", "sector", "coverage", "wireframe"]
+        doc = """What the gprim is a picture of: the element's body
+        (purpose render), a stand-in (purpose proxy), the axis (purpose
+        guide), a plan footprint, a symbol, a spatial extent (never an
+        obstacle), an analytic view sector or analytic clipped coverage.
+        Extent, sector, coverage and wireframe require purpose guide."""
+    )
+    uniform token aeco:derived:approx = "exact" (
+        allowedTokens = ["exact", "driverEval", "tessellated", "arcSegmented",
+                         "defaultDims", "bbox"]
+        doc = """exact: a kernel-evaluated body (BrepArray) or an analytic gprim.
+        driverEval: an exact evaluation of the element's DRIVERS by a stage-side
+        kernel; ignores host-only effects (joins, clips, take-outs) and is
+        superseded by the host's exact body on the next sync."""
+    )
+    string aeco:derived:stamp = "" (
+        doc = """The deriving host or tool and its version."""
+    )
+    rel aeco:derived:from (
+        doc = """The gprim(s) this gprim was derived from, when it was derived
+        from another representation rather than from the element itself: a
+        tessellated Body targets its BodyExact; a baked wireframe targets the
+        BodyExact it was extracted from. N:1 is allowed (one mesh from several
+        exact bodies). These links correlate representations of one referent."""
+    )
+    double aeco:derived:tolerance = 0 (
+        doc = """(m) The tolerance the derivation honoured: for approx = exact the
+        kernel's modelling tolerance; for tessellated the linear deflection; 0 = unknown. Lets a
+        consumer decide whether a measured distance is inside the noise."""
+    )
+}

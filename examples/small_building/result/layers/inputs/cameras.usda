@@ -1,0 +1,15 @@
+#usda 1.0
+
+def "Renders"
+{
+    def Camera "overview"
+    {
+        float2 clippingRange = (0.01, 99.31568)
+        float horizontalAperture = 173.54144
+        token projection = "orthographic"
+        float verticalAperture = 108.46341
+        matrix4d xformOp:transform = ( (0.7071067811865477, -0.7071067811865477, 0, 0), (0.40824829046386313, 0.40824829046386313, 0.8164965809277263, 0), (-0.5773502691896258, -0.5773502691896258, 0.5773502691896258, 0), (-19.7133121357878, -20.01331212982734, 20.998312129827344, 1) )
+        uniform token[] xformOpOrder = ["xformOp:transform"]
+    }
+}
+

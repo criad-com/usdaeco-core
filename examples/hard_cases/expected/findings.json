@@ -1,0 +1,10 @@
+[
+  {
+    "message": "/Metro/Zones/DesignOptionStudy lists member /Metro/Campus/ParcelNorth/Development/Parts/TowerB/B_L1/OpenPlanB which does not resolve \u2014 a restructure moved it; usdaeco_tools.repath repairs by aeco:id.",
+    "name": "danglingMember",
+    "paths": [
+      "/Metro/Zones/DesignOptionStudy"
+    ],
+    "severity": "warn"
+  }
+]

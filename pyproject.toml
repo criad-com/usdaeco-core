@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "usdaeco-core"
+version = "0.9.2"
+license = "MIT"
+description = "Core identity, spatial structure, classification and representation semantics for OpenUSD"
+requires-python = ">=3.11"
+dependencies = ["usdaeco-toolchain>=0.3.1,<0.4"]
+
+[project.scripts]
+aeco-core = "usdaeco_core.cli:main"
+
+[tool.setuptools]
+packages = ["usdaeco_core", "usdaeco_tools", "usdAecoValidators"]
+package-dir = {usdaeco_core = "tools/usdaeco_core", usdaeco_tools = "tools/usdaeco_tools", usdAecoValidators = "usdAecoValidators"}
+
+[tool.setuptools.package-data]
+usdAecoValidators = ["plugInfo.json"]
+usdaeco_tools = ["registries/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["testenv"]
+python_files = ["test*.py"]

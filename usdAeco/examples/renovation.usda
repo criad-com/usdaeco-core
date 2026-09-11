@@ -1,0 +1,89 @@
+#usda 1.0
+(
+    defaultPrim = "Reno"
+    fallbackPrimTypes = {
+        token[] AecoFacility = ["Xform"]
+        token[] AecoFacilityPart = ["Xform"]
+        token[] AecoLevel = ["Xform"]
+        token[] AecoPort = ["Xform"]
+        token[] AecoSite = ["Xform"]
+        token[] AecoSpace = ["Xform"]
+        token[] AecoSystem = ["Scope"]
+        token[] AecoZone = ["Scope"]
+    }
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "Reno" (
+    prepend apiSchemas = ["AecoProjectAPI"]
+    kind = "assembly"
+)
+{
+    string aeco:project:id = "5f53ebff-a8a4-55d0-b7ea-f4b5cddf8e06"
+    string aeco:project:name = "Wing B Refurbishment"
+
+    def AecoSite "Site"
+    {
+        string aeco:id = "db6ab87a-22f0-5181-b97d-116f8c988e54"
+        uniform token aeco:phase = "existing"
+
+        def AecoFacility "Building" (
+            prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+        )
+        {
+            string aeco:class:ifc:code = "IfcBuilding"
+            string aeco:class:ifc:name = "Building"
+            string aeco:id = "58d91d44-9fad-5353-b476-2143495af57b"
+            uniform token aeco:phase = "existing"
+
+            def AecoFacilityPart "WingB"
+            {
+                string aeco:id = "69121a8b-2039-5b69-91fb-a7d4e63bb735"
+                uniform token aeco:phase = "existing"
+
+                def AecoLevel "L1"
+                {
+                    double aeco:elevation = 0
+                    string aeco:id = "10f0ce79-3f11-5517-9b4e-404c362eef0f"
+                    uniform token aeco:phase = "existing"
+
+                    def AecoSpace "Office"
+                    {
+                        string aeco:id = "c557f0a3-1802-521f-9249-71a1005f44e3"
+                        uniform token aeco:phase = "existing"
+
+                        def Xform "Partition1" (
+                            prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                        )
+                        {
+                            string aeco:class:ifc:code = "IfcWall.PARTITIONING"
+                            string aeco:id = "60a52f04-3a31-506b-98ca-8362faef9fbb"
+                            uniform token aeco:phase = "demolished"
+                        }
+
+                        def Xform "Partition2" (
+                            prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                        )
+                        {
+                            string aeco:class:ifc:code = "IfcWall.PARTITIONING"
+                            string aeco:id = "0f3c2e51-7d0e-5f7a-9c3b-2a1d6e8b4c90"
+                            uniform token aeco:phase = "proposed"
+                        }
+                    }
+
+                    def AecoSpace "Breakout"
+                    {
+                        string aeco:id = "6c2ee026-7f4f-5a5f-9fe3-b85872eceac5"
+                    }
+                }
+            }
+        }
+
+        def AecoSpace "Compound"
+        {
+            string aeco:id = "9440903f-8631-5881-a78b-02929a08c153"
+            uniform token aeco:phase = "temporary"
+        }
+    }
+}

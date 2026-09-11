@@ -1,0 +1,12 @@
+{
+  "registry": "aeco:props set names",
+  "version": "0.1.1",
+  "updated": "2026-09-11",
+  "sanctioned": [
+    "Pset_*",
+    "Qto_*",
+    "Ifc*",
+    "source"
+  ],
+  "notes": "The `aeco:props:<set>:<prop>` quarantine (rule E7) is deliberately open \u2014 any tool may stash namespaced data there without schema change. This registry makes the SET names enumerable so conformance can REPORT (warn, never error) which sets a stage uses and flag ones outside the sanctioned families, turning an open convention into a measurable one. A `*` suffix marks an open family (any suffix allowed). Projects add their own set names through a project profile."
+}

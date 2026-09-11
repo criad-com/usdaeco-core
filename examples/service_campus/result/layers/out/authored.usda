@@ -1,0 +1,144 @@
+#usda 1.0
+(
+    defaultPrim = "ServiceProject"
+    fallbackPrimTypes = {
+        token[] AecoFacility = ["Xform"]
+        token[] AecoFacilityPart = ["Xform"]
+        token[] AecoLevel = ["Xform"]
+        token[] AecoPort = ["Xform"]
+        token[] AecoSite = ["Xform"]
+        token[] AecoSpace = ["Xform"]
+        token[] AecoSystem = ["Scope"]
+        token[] AecoZone = ["Scope"]
+    }
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "ServiceProject" (
+    prepend apiSchemas = ["AecoProjectAPI"]
+    kind = "assembly"
+)
+{
+    string aeco:project:id = "ec7cbf76-c330-5857-a9d6-99bbedbbece4"
+    string aeco:project:name = "Service campus"
+
+    def AecoSite "Campus"
+    {
+        string aeco:id = "e6c84505-d6b2-58ee-8fee-890bd38ac9a2"
+
+        def AecoFacility "Building" (
+            prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+        )
+        {
+            string aeco:class:ifc:code = "IfcBuilding"
+            string aeco:class:ifc:name = "Building"
+            string aeco:id = "65285156-3482-564f-8265-728640299ac2"
+
+            def AecoSpace "HallA" (
+                prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+            )
+            {
+                string aeco:class:ifc:code = "IfcSpace"
+                string aeco:class:ifc:name = "Space"
+                string aeco:id = "b7f12f4d-ce25-5769-a3ce-eff6b2695f94"
+
+                def Xform "Equipment01" (
+                    prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                )
+                {
+                    string aeco:class:ifc:code = "IfcElectricAppliance"
+                    string aeco:class:ifc:name = "Electric Appliance"
+                    string aeco:id = "d8f32536-6442-51ee-8201-dc1675e9885c"
+                }
+
+                def Xform "Equipment02" (
+                    prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                )
+                {
+                    string aeco:class:ifc:code = "IfcElectricAppliance"
+                    string aeco:class:ifc:name = "Electric Appliance"
+                    string aeco:id = "d9750c20-da13-564d-93d3-45a1c3b37ef6"
+                }
+            }
+
+            def AecoSpace "HallB"
+            {
+                string aeco:id = "40719d1e-7bf0-5ba3-a3b6-b8c794e77fd6"
+            }
+
+            def AecoSpace "PlantRoom"
+            {
+                string aeco:id = "3f1184d3-5ece-530c-8670-a1fb5d0d3c7c"
+            }
+
+            def AecoSpace "ServiceCorridor"
+            {
+                string aeco:id = "141ffdc3-5ade-5d2b-9f6f-3343df642b64"
+            }
+        }
+
+        def AecoSpace "Switchyard" (
+            prepend apiSchemas = ["AecoClassificationAPI:uniclass"]
+        )
+        {
+            string aeco:class:uniclass:code = "SL_90_50_88"
+            string aeco:class:uniclass:name = "Transformer yards"
+            string aeco:id = "4bcaa6bc-880e-52b5-90b3-efa260188536"
+
+            def Xform "Transformer1" (
+                prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+            )
+            {
+                string aeco:class:ifc:code = "IfcTransformer"
+                string aeco:class:ifc:name = "Transformer"
+                string aeco:id = "ff9f0724-f882-5bd9-8fd4-7ebf346d2f1e"
+            }
+        }
+
+        def AecoSpace "GeneratorYard"
+        {
+            string aeco:id = "c49aeba5-5d35-5844-b941-9a9a6f2ac822"
+
+            def Xform "Genset1" (
+                prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+            )
+            {
+                string aeco:class:ifc:code = "IfcElectricGenerator"
+                string aeco:class:ifc:name = "Electric Generator"
+                string aeco:id = "b155ceaa-2ee9-5c80-b51e-771848171f1a"
+            }
+        }
+    }
+
+    def Scope "Zones"
+    {
+        def AecoZone "FireCompartmentA" (
+            prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+        )
+        {
+            string aeco:class:ifc:code = "IfcSpatialZone.FIRESAFETY"
+            string aeco:id = "5a4c5d36-7913-55da-b818-51104e67eff3"
+            prepend rel collection:members:includes = [
+                </ServiceProject/Campus/Building/HallA>,
+                </ServiceProject/Campus/Building/ServiceCorridor>,
+            ]
+        }
+    }
+
+    def Scope "Systems"
+    {
+        def AecoSystem "StandbyPower" (
+            prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+        )
+        {
+            string aeco:class:ifc:code = "IfcDistributionSystem.POWERGENERATION"
+            string aeco:id = "9d6a0b3c-7e1f-5a2b-8c4d-1e0f2a3b4c5d"
+            prepend rel aeco:serves = </ServiceProject/Campus/Building/HallA>
+            prepend rel collection:members:includes = [
+                </ServiceProject/Campus/GeneratorYard/Genset1>,
+                </ServiceProject/Campus/Switchyard/Transformer1>,
+            ]
+        }
+    }
+}

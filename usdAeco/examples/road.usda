@@ -1,0 +1,102 @@
+#usda 1.0
+(
+    defaultPrim = "RoadProject"
+    fallbackPrimTypes = {
+        token[] AecoFacility = ["Xform"]
+        token[] AecoFacilityPart = ["Xform"]
+        token[] AecoLevel = ["Xform"]
+        token[] AecoPort = ["Xform"]
+        token[] AecoSite = ["Xform"]
+        token[] AecoSpace = ["Xform"]
+        token[] AecoSystem = ["Scope"]
+        token[] AecoZone = ["Scope"]
+    }
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "RoadProject" (
+    prepend apiSchemas = ["AecoProjectAPI"]
+    kind = "assembly"
+)
+{
+    string aeco:project:id = "6e7c589a-e31d-526e-8c0e-fb1d37a86749"
+    string aeco:project:name = "Access Road"
+
+    def AecoSite "Corridor"
+    {
+        string aeco:id = "a7277a8f-3f5c-5f1f-8ef0-6de5dbe3e3bd"
+
+        def AecoFacility "AccessRoad" (
+            prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+        )
+        {
+            string aeco:class:ifc:code = "IfcRoad"
+            string aeco:class:ifc:name = "Road"
+            string aeco:id = "d6a20cf6-6876-5506-a608-99469b786f4c"
+
+            def AecoFacilityPart "S1" (
+                prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+            )
+            {
+                string aeco:class:ifc:code = "IfcRoadPart.ROADSEGMENT"
+                string aeco:class:ifc:name = "Road Part (segment)"
+                string aeco:id = "3b76ac88-b940-591e-a0a6-86cfb838ac76"
+            }
+
+            def AecoFacilityPart "S2" (
+                prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+            )
+            {
+                string aeco:class:ifc:code = "IfcRoadPart.ROADSEGMENT"
+                string aeco:class:ifc:name = "Road Part (segment)"
+                string aeco:id = "f8876b65-a60a-5118-aa59-4ef9ffbee908"
+
+                def Xform "Culvert1" (
+                    prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                )
+                {
+                    string aeco:class:ifc:code = "IfcPipeSegment.CULVERT"
+                    string aeco:class:ifc:name = "Pipe Segment (culvert)"
+                    string aeco:id = "fb3f4bfd-8d59-5d55-bb63-fa3e00d7f70d"
+                    prepend rel aeco:referencedContainers = </RoadProject/Corridor/AccessRoad/S1>
+                }
+            }
+
+            def AecoFacilityPart "S3" (
+                prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+            )
+            {
+                string aeco:class:ifc:code = "IfcRoadPart.ROADSEGMENT"
+                string aeco:class:ifc:name = "Road Part (segment)"
+                string aeco:id = "9368acd1-51d3-5dd1-9b7c-a3ca21e0e1da"
+
+                def Xform "Sign1" (
+                    prepend apiSchemas = ["AecoElementAPI", "AecoClassificationAPI:ifc"]
+                )
+                {
+                    string aeco:class:ifc:code = "IfcSign.PICTORAL"
+                    string aeco:class:ifc:name = "Sign"
+                    string aeco:id = "f9cfee2f-baec-538d-8758-de4f2496ecaf"
+                }
+            }
+        }
+    }
+
+    def Scope "Systems"
+    {
+        def AecoSystem "SurfaceDrainage" (
+            displayName = "Surface water drainage"
+            prepend apiSchemas = ["AecoClassificationAPI:ifc"]
+        )
+        {
+            string aeco:class:ifc:code = "IfcDistributionSystem.STORMWATER"
+            string aeco:id = "0c1e6a0e-2b5a-5a0f-9a0a-4a6f9a3d1b7e"
+            prepend rel aeco:serves = [
+                </RoadProject/Corridor/AccessRoad/S1>,
+                </RoadProject/Corridor/AccessRoad/S2>,
+            ]
+            prepend rel collection:members:includes = </RoadProject/Corridor/AccessRoad/S2/Culvert1>
+        }
+    }
+}

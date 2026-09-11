@@ -1,0 +1,43 @@
+{
+  "registry": "AecoClassificationAPI instance names",
+  "version": "0.6.0",
+  "updated": "2026-09-08",
+  "systems": {
+    "ifc": {
+      "name": "IFC entity (optionally with PredefinedType)",
+      "codeForm": "IfcWall | IfcWall.PARTITIONING | IfcDistributionSystem.CHILLEDWATER",
+      "uriRoot": "https://identifier.buildingsmart.org/uri/buildingsmart/ifc/4.3/class/"
+    },
+    "uniclass": {
+      "name": "Uniclass (NBS)",
+      "codeForm": "Ss_25_10_20 | SL_45_10_63 | Co_20_15_20",
+      "uriRoot": "https://uniclass.thenbs.com/taxon/"
+    },
+    "omniclass": {
+      "name": "OmniClass (CSI)",
+      "codeForm": "23-13 15 11",
+      "uriRoot": ""
+    },
+    "uniformat": {
+      "name": "UniFormat (CSI/CSC)",
+      "codeForm": "B2010",
+      "uriRoot": ""
+    },
+    "masterformat": {
+      "name": "MasterFormat (CSI/CSC)",
+      "codeForm": "09 21 16",
+      "uriRoot": ""
+    },
+    "etim": {
+      "name": "ETIM product classes",
+      "codeForm": "EC000001",
+      "uriRoot": ""
+    },
+    "bsdd": {
+      "name": "any other bSDD-published dictionary (the uri pins which)",
+      "codeForm": "per dictionary",
+      "uriRoot": "https://identifier.buildingsmart.org/uri/"
+    }
+  },
+  "notes": "Classification is the core's ONE kind mechanism (rule E4): what an element, a spatial container, a group or a catalog type IS comes from external, versioned dictionaries, never from a schema enum or a core token. This registry governs only the INSTANCE NAMES (aeco:class:<system>:...) so that two tools naming the same dictionary use the same token; the codes, names and URIs inside an instance belong to the dictionary's publisher. Consumers WARN, never error, on an instance name outside this list. `ifc` is the recommended default system because every authoring tool can emit an IFC entity name; its code form is '<Entity>' or '<Entity>.<PREDEFINEDTYPE>'. The registry is separate from the schema; a project profile may name additional systems."
+}

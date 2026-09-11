@@ -1,0 +1,77 @@
+#usda 1.0
+( subLayers = [@../schema.usda@] )
+over "AecoSpatialBase" (
+    customData = {
+        string userDocBrief = "Abstract root of all AECO spatial containers."
+    }
+) {}
+over "AecoSite" (
+    customData = {
+        string userDocBrief = "An area of land or water under development."
+    }
+) {}
+over "AecoFacility" (
+    customData = {
+        string userDocBrief = "One built asset operated as a whole: a building, bridge, road, tunnel, plant."
+    }
+) {}
+over "AecoFacilityPart" (
+    customData = {
+        string userDocBrief = "A structural subdivision of a facility: wing, block, tower, podium, road section, track segment, process unit."
+    }
+) {}
+over "AecoLevel" (
+    customData = {
+        string userDocBrief = "The one universal facility part: a horizontal stratum at a datum elevation — typed because every vertical facility on earth shares this convention and schedules/sections key on it."
+    }
+) {}
+over "AecoSpace" (
+    customData = {
+        string userDocBrief = "A bounded usable region, interior or exterior — a room, a hall, a yard, a corridor, an atrium, a plaza."
+    }
+) {}
+over "AecoGroupBase" (
+    customData = {
+        string userDocBrief = "Abstract root of the two group types."
+    }
+) {}
+over "AecoSystem" (
+    customData = {
+        string userDocBrief = "A functional service network — a piping run, an air loop, a circuit, a structural frame, a containment route: the LOGICAL view of a service, distinct from its spatially-placed members."
+    }
+) {}
+over "AecoZone" (
+    customData = {
+        string userDocBrief = "A purpose-driven grouping of spaces/regions and/or elements — a fire compartment, an HVAC zone, a security zone, a department."
+    }
+) {}
+over "AecoPort" (
+    customData = {
+        string userDocBrief = "A typed connection point on an element, authored as a child prim so it has a transform (the physical connection location) and can be targeted by relationships."
+    }
+) {}
+over "AecoProjectAPI" (
+    customData = {
+        string userDocBrief = "Applied to the root model prim of an AECO stage: marks it as an AECO project and carries project identity."
+    }
+) {}
+over "AecoElementAPI" (
+    customData = {
+        string userDocBrief = "The universal marker for 'this prim is a built element' — a trait applied to any Imageable (Mesh, assembly, reference, future BREP), never a parallel typed hierarchy."
+    }
+) {}
+over "AecoClassificationAPI" (
+    customData = {
+        string userDocBrief = "Multiple-apply classification hook — THE kind mechanism of the core: each instance binds the prim to one entry of one external classification system — apiSchemas = ['AecoClassificationAPI:ifc', 'AecoClassificationAPI:uniclass'] yields aeco:class:ifc:code etc."
+    }
+) {}
+over "AecoTypeAPI" (
+    customData = {
+        string userDocBrief = "Marks a class prim as a catalog type (product/family definition) and carries product identity."
+    }
+) {}
+over "AecoDerivedGeometryAPI" (
+    customData = {
+        string userDocBrief = "Marks a gprim as DERIVED from a referent by a tool: the host's tessellated body, a stage-side proxy, the axis curve, a footprint, a symbol, a spatial extent or an analytic guide."
+    }
+) {}

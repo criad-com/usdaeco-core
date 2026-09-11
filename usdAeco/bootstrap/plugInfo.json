@@ -1,0 +1,18 @@
+{
+    "Plugins": [
+        {
+            "Info": {
+                "SdfMetadata": {
+                    "aecoDerived": {
+                        "type": "bool",
+                        "appliesTo": ["attributes", "relationships"],
+                        "displayGroup": "AECO"
+                    }
+                }
+            },
+            "Name": "usdAecoBootstrap",
+            "Root": ".",
+            "Type": "resource"
+        }
+    ]
+}
