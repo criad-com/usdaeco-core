@@ -48,7 +48,7 @@ wall corner with derived geometry in separate layers.
 
 Use Python 3.11+ with OpenUSD 26.8+, jinja2, numpy, packaging and pytest.
 Rendering additionally needs Pillow and the standard `usdrecord` utility.
-Place `usdaeco-toolchain` v0.3.8 beside this repository, or set TOOLCHAIN_DIR.
+Place `usdaeco-toolchain` v0.3.10 beside this repository, or set TOOLCHAIN_DIR.
 Source checks need no package installation or build backend.
 
 ```sh
@@ -61,12 +61,15 @@ env -u PYTHONPATH "$PYTHON" -m pytest -q
 export PXR_PLUGINPATH_NAME="$PWD/out/plugins/usdAeco/resources:$PWD/usdAecoValidators"
 env -u PYTHONPATH "$PYTHON" tools/aeco_core.py check usdAeco/examples/small_building.usda
 env -u PYTHONPATH "$PYTHON" tools/render_example.py
-env -u PYTHONPATH "$PYTHON" examples/small_building/run.py --publish
+for example in early_design hard_cases renovation road service_campus small_building; do
+  env -u PYTHONPATH "$PYTHON" "examples/$example/run.py" --publish
+done
 nix flake check --no-write-lock-file
 ```
 
 `build.sh` regenerates the committed resource files beside `schema.usda`.
-`check.py` builds into `out/`, runs S01–S29 including generator validation,
+`check.py` builds into `out/`, runs S01–S29 including package-version consistency
+and generator validation,
 requires all eight Python validators to load, and exercises core contracts.
 It calls `check_example()` for all six publications, including fresh-run
 comparison, relocated stock USD composition and fresh plugin-free rendering.
@@ -107,13 +110,20 @@ See the [family manifest](https://github.com/criad-com/usdaeco-scenarios/blob/ma
 
 ## Status
 
-Verified: **71 checks, 0 failed, 0 not run** under toolchain v0.3.8;
+Verified: **71 checks, 0 failed, 0 not run** under toolchain v0.3.10;
 **27 tests and 115 subtests passed**. All six publication checks pass, including
 relocated composition and fresh stock USD renders.
 
-Version 0.9.4 corrects public repository names to `github.com/criad-com` and
-pins toolchain v0.3.8. The six manifests record the new toolchain pin; all
-35 committed result files are unchanged, with no result republish.
+Version 0.9.5 selects published toolchain v0.3.10 and data release v0.4.8.
+The dependency file and six example manifests record both exact revisions.
+All six examples were republished through the documented command: all six
+crates and 17 editable layers are byte-identical to the previous publication.
+The six result notices change only their source tag; manifest changes are pins,
+revisions and notice hashes. Fresh stock renders passed, with mean absolute RGB
+differences of 0.031–0.160 on the 0–255 scale. The 12 committed previews and
+their recorded hashes are retained to avoid sampling churn. Requirement ranges
+are unchanged. Version 0.9.4 corrected public repository names to
+`github.com/criad-com`.
 Version 0.9.3 re-pinned to train aeco-0.7.0. Version 0.9.2 published six standalone
 results, improved the small building, removed process prescriptions from the
 documentation and adopted MIT.
@@ -122,11 +132,12 @@ from 0.9.1. The gate measures wall continuity and slab containment; general
 geometric accuracy remains outside the core's guarantees.
 
 The example hook serializes real UsdValidation finding
-sites with the USD 26.8 API and runs all eight validators. Nix is **not proven**:
-the single offline check failed during input resolution because a local Git
-override interpreted a release tag as a branch. Git tag overrides need
-`ref=refs/tags/<tag>`. No retry was made; S05 verifies the public names and pins,
-but full Nix evaluation and builds remain unverified.
+sites with the USD 26.8 API and runs all eight validators. S05 checks release-tag
+refs and package-version consistency. The single offline Nix check used eight
+local overrides and evaluated all five Darwin derivations, then exited 1 while
+unpacking LLVM 21.1.8 because the local build volume ran out of space. No retry
+was made and no lockfile was committed. Nix builds and public GitHub input
+resolution remain **not proven**; local overrides do not test public fetching.
 
 ## Licence
 

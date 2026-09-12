@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "usdaeco-core"
-version = "0.9.4"
+version = "0.9.5"
 license = "MIT"
 description = "Core identity, spatial structure, classification and representation semantics for OpenUSD"
 requires-python = ">=3.11"

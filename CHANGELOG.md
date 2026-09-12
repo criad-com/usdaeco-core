@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.9.5
+
+- public re-pin: usdaeco-toolchain v0.3.10, usdaeco-datacentre v0.4.8.
+  Record both tagged revisions in dependencies.json and all six example
+  manifests. Requirement ranges are unchanged.
+- Retain the unreleased 0.9.5 package and plugin metadata. Toolchain v0.3.10
+  checks release-tag family refs and matching package versions through S05.
+- Republish all six examples using the documented build step and update the
+  boundary check's two current-publication version literals.
+- Verify 71 checks, 0 failed, 0 not run with toolchain v0.3.10, including
+  S01–S29 and all eight required validators; 27 tests and 115 subtests pass.
+- All six rebuilt crates and 17 editable layers are byte-identical. The six
+  result notices change only the source tag; manifests update pins, revisions
+  and notice hashes. Fresh stock renders pass; retain the 12 committed preview
+  images and their hashes because renderer sampling changes image bytes.
+- Nix builds remain unproven: the single offline attempt with eight local
+  overrides evaluated five Darwin derivations, then exited 1 while unpacking
+  LLVM 21.1.8 because the local build volume ran out of space. No retry or
+  committed lockfile; public GitHub resolution remains unverified.
+
 ## 0.9.4
 
 - Public names → github.com/criad-com in flake inputs, documentation links

@@ -1,7 +1,7 @@
 {
   "actual_findings_sha256": "925f5ef147b9c509b45bd6add7169b3d2b05f2c3176f871b697a81ddb3b4c9e0",
   "datacentre": {
-    "ref": "v0.4.5",
+    "ref": "v0.4.8",
     "variant": "base"
   },
   "facility": "demo-datacentre-01",
@@ -9,13 +9,15 @@
   "pins": {
     "datacentre": {
       "library": null,
-      "ref": "v0.4.5",
-      "repo": "usdaeco-datacentre"
+      "ref": "v0.4.8",
+      "repo": "usdaeco-datacentre",
+      "rev": "9e22b14c4909e50806805e735f93b1b425ac48cb"
     },
     "toolchain": {
       "library": null,
-      "ref": "v0.3.8",
-      "repo": "usdaeco-toolchain"
+      "ref": "v0.3.10",
+      "repo": "usdaeco-toolchain",
+      "rev": "59d3da5ff5114089b54efaaae38efdd7fe1b8e73"
     }
   },
   "renders": [
@@ -33,7 +35,7 @@
       {
         "bytes": 615,
         "path": "result/README.md",
-        "sha256": "5b4382702f710f18f53671d76449835816d77154365a0945ddbcb4dee311ae06"
+        "sha256": "6a6abecb2f71fe0c2dd5aa7aabf58f482e87c4ea92538c61108e4a3c11517746"
       },
       {
         "bytes": 131986,
