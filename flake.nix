@@ -1,8 +1,8 @@
 {
   description = "usdAeco core identity, structure and representation semantics";
   inputs = {
-    toolchain.url = "github:usdaeco/usdaeco-toolchain?ref=v0.3.1";
-    datacentre = { url = "github:usdaeco/usdaeco-datacentre?ref=v0.4.1"; flake = false; };
+    toolchain.url = "github:criad-com/usdaeco-toolchain?ref=v0.3.8";
+    datacentre = { url = "github:criad-com/usdaeco-datacentre?ref=v0.4.5"; flake = false; };
     nixpkgs.follows = "toolchain/nixpkgs";
   };
   outputs = { self, nixpkgs, toolchain, ... }:

@@ -73,10 +73,10 @@ def term_hits(relative, content):
     if publication:
         content = re.sub(rf'"(?:{PUBLICATION_NAME}|usdaeco-{PUBLICATION_NAME}|demo-{PUBLICATION_NAME}-01)"', '"publication"', content)
     if relative == "flake.nix":
-        content = content.replace(PUBLICATION_NAME + ' = { url = "github:usdaeco/usdaeco-' + PUBLICATION_NAME + '?ref=v0.4.1";',
+        content = content.replace(PUBLICATION_NAME + ' = { url = "github:criad-com/usdaeco-' + PUBLICATION_NAME + '?ref=v0.4.5";',
                                   'publication = { url = "public-release";')
     if fnmatchcase(relative, "examples/*/result/README.md"):
-        content = content.replace('Source pin: `usdaeco-' + PUBLICATION_NAME + ' v0.4.1`, variant `base`; source mode `minimal`',
+        content = content.replace('Source pin: `usdaeco-' + PUBLICATION_NAME + ' v0.4.5`, variant `base`; source mode `minimal`',
                                   'Source mode: minimal')
     if relative == "tools/usdaeco_core/example.py":
         content = content.replace('AECO_' + PUBLICATION_NAME.upper() + '_ROOT', 'EXTERNAL_ROOT').replace('AECO_' + PUBLICATION_NAME.upper() + '_STAGE', 'EXTERNAL_STAGE')

@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.9.4
+
+- Public names → github.com/criad-com in flake inputs, documentation links
+  and the boundary check's public-URL literal.
+- Pin toolchain v0.3.8 and update its evidence in the six example manifests.
+  Keep all other dependency pins and requirement ranges unchanged.
+- Bump the package and generated plugin metadata; the schema and committed
+  result files are unchanged. No result republish is needed.
+- Verify 71 checks, 0 failed, 0 not run against the tagged toolchain v0.3.8,
+  including S01–S29 and all six publication checks; 27 tests and 115 subtests pass.
+- Nix remains unproven: the single offline attempt used a local Git override
+  whose release tag was interpreted as a branch. Explicit Git tag overrides
+  require `ref=refs/tags/<tag>`; no retry was made.
+
+## 0.9.3
+
+- Re-pin to train aeco-0.7.0: toolchain v0.3.5 and datacentre v0.4.5.
+  Keep requirement ranges and the core schema contract unchanged.
+- Refresh the six publications' dependency evidence and generated source-pin
+  notices; the examples still use their own minimal stages. All six crates and
+  17 editable layers are byte-identical on fresh runs; retain the committed
+  images, whose bytes are not compared across renders.
+- Update the boundary check's two current-publication version literals.
+- Verify 70 checks, 0 failed, 0 not run, including S01–S28; 27 tests and
+  115 subtests pass. Toolchain v0.3.5 resolves the earlier licence-policy failures.
+- Nix remains unproven: the single offline check with direct input overrides
+  could not resolve a transitive public input (HTTP 404).
+
 ## 0.9.2
 
 - Re-author the small building as a dimensioned enclosure: 6 × 4 m clear room,

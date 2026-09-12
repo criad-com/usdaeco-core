@@ -1,7 +1,7 @@
 {
   "actual_findings_sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
   "datacentre": {
-    "ref": "v0.4.1",
+    "ref": "v0.4.5",
     "variant": "base"
   },
   "facility": "demo-datacentre-01",
@@ -9,12 +9,12 @@
   "pins": {
     "datacentre": {
       "library": null,
-      "ref": "v0.4.1",
+      "ref": "v0.4.5",
       "repo": "usdaeco-datacentre"
     },
     "toolchain": {
       "library": null,
-      "ref": "v0.3.1",
+      "ref": "v0.3.8",
       "repo": "usdaeco-toolchain"
     }
   },
@@ -33,7 +33,7 @@
       {
         "bytes": 588,
         "path": "result/README.md",
-        "sha256": "8fef07eed3a302db2d22b9c60ffc09bfc89fae29995ee10e88ea1ac4d5c4be99"
+        "sha256": "a4f08dbbc19ccd669b6a066fefb97627b711fc359053d28d674f17168e8720f3"
       },
       {
         "bytes": 11916,

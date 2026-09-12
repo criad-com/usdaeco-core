@@ -3,12 +3,12 @@
     "toolchain": {
       "repo": "usdaeco-toolchain",
       "library": null,
-      "ref": "v0.3.1"
+      "ref": "v0.3.8"
     },
     "datacentre": {
       "repo": "usdaeco-datacentre",
       "library": null,
-      "ref": "v0.4.1"
+      "ref": "v0.4.5"
     }
   }
 }

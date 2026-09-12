@@ -48,7 +48,7 @@ wall corner with derived geometry in separate layers.
 
 Use Python 3.11+ with OpenUSD 26.8+, jinja2, numpy, packaging and pytest.
 Rendering additionally needs Pillow and the standard `usdrecord` utility.
-Place `usdaeco-toolchain` v0.3.1 beside this repository, or set TOOLCHAIN_DIR.
+Place `usdaeco-toolchain` v0.3.8 beside this repository, or set TOOLCHAIN_DIR.
 Source checks need no package installation or build backend.
 
 ```sh
@@ -66,7 +66,7 @@ nix flake check --no-write-lock-file
 ```
 
 `build.sh` regenerates the committed resource files beside `schema.usda`.
-`check.py` builds into `out/`, runs S01–S28 including generator validation,
+`check.py` builds into `out/`, runs S01–S29 including generator validation,
 requires all eight Python validators to load, and exercises core contracts.
 It calls `check_example()` for all six publications, including fresh-run
 comparison, relocated stock USD composition and fresh plugin-free rendering.
@@ -82,7 +82,7 @@ up. Schema composition itself needs no Python companion.
 
 Flake inputs use public release refs. Local registry and `--override-input`
 configuration is described in the
-[build kit documentation](https://github.com/usdaeco/usdaeco-toolchain#build-and-check).
+[build kit documentation](https://github.com/criad-com/usdaeco-toolchain#build-and-check).
 Repeat overrides for transitive inputs; keep deployment lockfiles uncommitted.
 The shared harness requires a data-release pin even in minimal mode. That pin
 is unused bookkeeping here: all six examples compose their own source stages,
@@ -90,7 +90,7 @@ reject external source overrides and make no claim about the pinned data.
 
 ## Family
 
-See the [family manifest](https://github.com/usdaeco/usdaeco-scenarios/blob/main/family.json) for related libraries, integrations and examples.
+See the [family manifest](https://github.com/criad-com/usdaeco-scenarios/blob/main/family.json) for related libraries, integrations and examples.
 
 ## Layout
 
@@ -107,21 +107,26 @@ See the [family manifest](https://github.com/usdaeco/usdaeco-scenarios/blob/main
 
 ## Status
 
-Verified: **70 checks, 2 failed** (the S01/S25 licence-policy mismatches below);
+Verified: **71 checks, 0 failed, 0 not run** under toolchain v0.3.8;
 **27 tests and 115 subtests passed**. All six publication checks pass, including
 relocated composition and fresh stock USD renders.
 
-Version 0.9.2 publishes six standalone results, improves the small building,
-removes process prescriptions from the documentation and adopts MIT.
+Version 0.9.4 corrects public repository names to `github.com/criad-com` and
+pins toolchain v0.3.8. The six manifests record the new toolchain pin; all
+35 committed result files are unchanged, with no result republish.
+Version 0.9.3 re-pinned to train aeco-0.7.0. Version 0.9.2 published six standalone
+results, improved the small building, removed process prescriptions from the
+documentation and adopted MIT.
 The schema's 8/2/5 class surface, property names, types and defaults are unchanged
 from 0.9.1. The gate measures wall continuity and slab containment; general
 geometric accuracy remains outside the core's guarantees.
 
-Toolchain 0.3.1 still assumes Apache (S01) and flags the MIT copyright line
-(S25). Both failures are reported without wrappers or exemptions; the complete
-MIT licence is retained. The example hook serializes real UsdValidation finding
+The example hook serializes real UsdValidation finding
 sites with the USD 26.8 API and runs all eight validators. Nix is **not proven**:
-the single offline attempt failed to resolve a public input (HTTP 404).
+the single offline check failed during input resolution because a local Git
+override interpreted a release tag as a branch. Git tag overrides need
+`ref=refs/tags/<tag>`. No retry was made; S05 verifies the public names and pins,
+but full Nix evaluation and builds remain unverified.
 
 ## Licence
 
